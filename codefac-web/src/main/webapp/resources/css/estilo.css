@@ -1,0 +1,115 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 28-dic-2015, 17:53:19
+    Author     : Carlos
+*/
+
+body
+{
+    background-color: aliceblue;
+    width: 100%;
+    border: 0px;
+    padding: 0px;
+    margin: 0px;
+    font-family:  Helvetica;
+    
+}
+
+h1,h2
+{
+    color: #485798; 
+}
+
+#cabecera
+{
+    height: 100%;
+    background-color: #485798;
+    text-align: center;
+}
+
+.titulo
+{
+    background-color: #5eaade;
+    color: #ffffff;
+    margin: 0px;
+    border: 0px;
+    padding: 4px;
+}
+
+
+
+#menu
+{
+    background-color: darkblue;
+    color: white;
+    height: 50px;
+    text-align: center;
+    
+    border-color: #3f5da2;
+    border: 10px;
+    border-bottom-color: #009966;
+    border-bottom: 30%;
+    
+}
+
+#contenido
+{
+    background-color: #ffffff;
+    color: black;
+    padding: 0px;
+    margin: 0px;
+   
+    
+   
+    
+}
+
+#piepagina
+{
+    background-color: #485798;
+    height: 25px;
+    color: white;
+    text-align: center;
+    font-size: 13px;
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+    padding-top: 5px;
+}
+
+.imagenCabecera
+{
+    background-color: activeborder;
+    width: 35%;
+}
+
+.menuPF
+{
+    width: 100%;    
+    text-align: center;
+   
+}
+
+.menuItem
+{
+    text-align: center;
+}
+
+.panelNoBorder, .panelNoBorder tr, .panelNoBorder td{
+    border: hidden;
+    border-color: white;
+}
+
+.presentadora
+{
+    background-image: url("#{request.contextPath}/resources/img/banner/presentadora.png");
+    background-repeat: no-repeat;
+    border: 5px;
+    border-bottom-width: 5px;
+    border-bottom-color: #485798;
+}
+

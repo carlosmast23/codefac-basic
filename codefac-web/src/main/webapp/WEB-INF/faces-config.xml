@@ -1,0 +1,283 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<faces-config version="2.2"
+              xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
+    <application>
+        <action-listener>org.primefaces.application.DialogActionListener</action-listener>
+        <navigation-handler>org.primefaces.application.DialogNavigationHandler</navigation-handler>
+        <view-handler>org.primefaces.application.DialogViewHandler</view-handler>
+    </application>
+    
+    <navigation-rule>
+        
+        <from-view-id>*</from-view-id>
+        
+        
+        <navigation-case>
+            <from-outcome>cliente</from-outcome>
+            <to-view-id>/admin/cliente/cliente.xhtml</to-view-id>
+        </navigation-case>
+        
+         <navigation-case>
+            <from-outcome>stockProductos</from-outcome>
+            <to-view-id>/admin/catalogo/stockPoductos.xhtml</to-view-id>
+        </navigation-case>
+        
+        
+        <navigation-case>
+            <from-outcome>buscarCliente</from-outcome>
+            <to-view-id>/admin/buscarCliente.xhtml</to-view-id>
+        </navigation-case>
+        
+                
+        <navigation-case>
+            <from-outcome>compraEditar</from-outcome>
+            <to-view-id>/admin/compraEditar.xhtml</to-view-id>
+        </navigation-case>
+              
+        <navigation-case>
+            <from-outcome>reporDistriProd</from-outcome>
+            <to-view-id>/admin/distribuidor/reportes/reporteProductosDistri.xhtml</to-view-id>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>compra</from-outcome>
+            <to-view-id>/admin/compra/compra.xhtml</to-view-id>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>configuracion</from-outcome>
+            <to-view-id>/admin/configuracion/configuracion.xhtml</to-view-id>
+        </navigation-case>
+        
+        
+        <navigation-case>
+            <from-outcome>compraAdmin</from-outcome>
+            <to-view-id>/admin/compra/compra.xhtml</to-view-id>
+        </navigation-case>
+        
+        
+        <navigation-case>
+            <from-outcome>login</from-outcome>
+            <to-view-id>login.xhtml</to-view-id>
+        </navigation-case>
+
+
+        <navigation-case>
+            <from-outcome>crearDistribuidor</from-outcome>
+            <to-view-id>/operador/crearDistribuidor.xhtml</to-view-id>
+        </navigation-case>
+        
+        
+        <navigation-case>
+            <from-outcome>factura</from-outcome>
+            <to-view-id>/operador/factura.xhtml</to-view-id>
+        </navigation-case>
+        
+        
+        <navigation-case>
+            <from-outcome>crearCliente</from-outcome>
+            <to-view-id>/dialogs/cliente/nuevoCliente.xhtml</to-view-id>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>crearUsuario</from-outcome>
+            <to-view-id>/dialogs/Usuario/nuevoUsuario.xhtml</to-view-id>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>crearCatalogoProducto</from-outcome>
+            <to-view-id>/operador/crearCatalogoProducto.xhtml</to-view-id>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>indexOperador</from-outcome>
+            <to-view-id>/operador/index.xhtml</to-view-id>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>reporteCliente</from-outcome>
+            <to-view-id>/admin/reporteSimpleCliente.xhtml</to-view-id>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>editarInventario</from-outcome>
+            <to-view-id>/admin/editarInventarioCatalogo.xhtml</to-view-id>
+        </navigation-case>
+        
+        
+        <navigation-case>
+            <from-outcome>productoGestion</from-outcome>
+            <to-view-id>/admin/catalogo/producto.xhtml</to-view-id>
+        </navigation-case>
+        
+        
+        <navigation-case>
+            <from-outcome>notaCredito</from-outcome>
+            <to-view-id>/operador/notaCredito.xhtml</to-view-id>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>pruebaConsulta</from-outcome>
+            <to-view-id>/test/pruebaConsulta.xhtml</to-view-id>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>gestionarCompra</from-outcome>
+            <to-view-id>/admin/compra/gestionarCompra.xhtml</to-view-id>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>verCompra</from-outcome>
+            <to-view-id>/admin/compra/verCompra.xhtml</to-view-id>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>distribuidor</from-outcome>
+            <to-view-id>/admin/distribuidor/distribuidor.xhtml</to-view-id>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>productoIndex</from-outcome>
+            <to-view-id>productos.xhtml</to-view-id>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>crearCombo</from-outcome>
+            <to-view-id>/admin/combos/crearCombo.xhtml</to-view-id>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>gestionarCombo</from-outcome>
+            <to-view-id>/admin/combos/gestionarCombo.xhtml</to-view-id>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>reporteCatalogo</from-outcome>
+            <to-view-id>/admin/catalogo/reporteCatalogo.xhtml</to-view-id>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>test1</from-outcome>
+            <to-view-id>/admin/test/test1.xhtml</to-view-id>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>verVenta</from-outcome>
+            <to-view-id>/admin/venta/verVenta.xhtml</to-view-id>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>gestionarVenta</from-outcome>
+            <to-view-id>/admin/venta/gestionarVenta.xhtml</to-view-id>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>facturaAdmin</from-outcome>
+            <to-view-id>/admin/venta/factura.xhtml</to-view-id>
+        </navigation-case>
+        
+        <navigation-rule>
+            <from-view-id>/admin/venta/factura.xhtml</from-view-id>
+            <navigation-case>
+                <from-action>factura</from-action>
+                <to-view-id>/admin/venta/factura.xhtml</to-view-id>
+            </navigation-case>  
+        </navigation-rule>
+        
+
+        <navigation-rule>
+            <from-view-id>/operador/factura.xhtml</from-view-id>
+            <navigation-case>
+                <from-action>factura</from-action>
+                <to-view-id>/operador/factura.xhtml</to-view-id>
+            </navigation-case>  
+        </navigation-rule>
+        
+        <navigation-rule>
+            <from-view-id>/operador/proforma.xhtml</from-view-id>
+            <navigation-case>
+                <from-action>proforma</from-action>
+                <to-view-id>/operador/proforma.xhtml</to-view-id>
+            </navigation-case>  
+        </navigation-rule>
+        
+        <navigation-rule>
+            <from-view-id>/admin/proforma.xhtml</from-view-id>
+            <navigation-case>
+                <from-action>proforma</from-action>
+                <to-view-id>/admin/proforma.xhtml</to-view-id>
+            </navigation-case>  
+        </navigation-rule>
+        
+        
+        <navigation-case>
+            <from-outcome>proformaAdmn</from-outcome>
+            <to-view-id>/admin/proforma.xhtml</to-view-id>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>proformaOperador</from-outcome>
+            <to-view-id>/operador/proforma.xhtml</to-view-id>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>reporteTest</from-outcome>
+            <to-view-id>/test/reporte.xhtml</to-view-id>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>buscarClientesDlg</from-outcome>
+            <to-view-id>/dialogs/cliente/buscarClientes.xhtml</to-view-id>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>ordenTrabajo</from-outcome>
+            <to-view-id>/admin/ordenTrabajo/ordenTrabajo.xhtml</to-view-id>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>gestionarOrdenTrabajo</from-outcome>
+            <to-view-id>/admin/ordenTrabajo/gestionarOrdenTrabajo.xhtml</to-view-id>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>verOrdenTrabajo</from-outcome>
+            <to-view-id>/admin/ordenTrabajo/verOrdenTrabajo.xhtml</to-view-id>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>verOrdenTrabajo</from-outcome>
+            <to-view-id>/admin/ordenTrabajo/verOrdenTrabajo.xhtml</to-view-id>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>trabajosPendientes</from-outcome>
+            <to-view-id>/empleado/ordenTrabajo/trabajosPendientes.xhtml</to-view-id>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>reporteVenta</from-outcome>
+            <to-view-id>/admin/venta/reporte/reporteVenta.xhtml</to-view-id>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>respaldo</from-outcome>
+            <to-view-id>/admin/backup/backup.xhtml</to-view-id>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>gestionarAbonos</from-outcome>
+            <to-view-id>/admin/venta/gestionarAbono.xhtml</to-view-id>
+        </navigation-case>
+        
+        <navigation-case>
+            <from-outcome>serviciosOrdenTrabajo</from-outcome>
+            <to-view-id>/admin/ordenTrabajo/catalogo_servicios.xhtml</to-view-id>
+        </navigation-case>
+
+                
+    </navigation-rule>
+    
+</faces-config>

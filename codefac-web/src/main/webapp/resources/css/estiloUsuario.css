@@ -1,0 +1,681 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 28-dic-2015, 17:53:19
+    Author     : Carlos
+*/
+
+body
+{
+    background-color: white;
+    width: 100%;
+    border: 25px;
+    padding: 0px;  
+    margin: 0px;
+    font-family:  Helvetica;
+}
+
+
+h1 , h2
+{
+    color: #485798;
+
+
+}
+
+.titulo
+{
+    background-color: #5eaade;
+    color: #ffffff;
+    margin: 0px;
+    border: 0px;
+    padding: 4px;
+}
+
+
+.panelContenido
+{
+    //font-size: 10px;    
+}
+
+.menuPanel
+{
+    //font-size: 12px;
+}
+
+#cabecera
+{
+    height: 75px;
+    background-color: #485798;
+    text-align: left;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+}
+
+
+#menu
+{
+    background-color: darkblue;
+    color: white;
+    height: 40px;
+    text-align: center;
+    top: 75px;
+    position: fixed;
+    width: 100%;
+    z-index: 100;
+}
+
+#contenido
+{
+    background-color: white;
+    color: black;
+    margin: 0 auto;
+    top: 100px;
+    padding-top: 115px;
+    padding-bottom: 25px;
+}
+
+#piepagina
+{
+    background-color: #485798;
+    height: 25px;
+    color: white;
+    text-align: center;
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+    padding-top: 5px;
+}
+
+.imagenCabecera
+{
+    background-color: activeborder;
+    width: 300px;
+    height: 75px;
+
+}
+
+.imagenCabecera2
+{
+
+    width: 500px;
+    height: 75px;
+    float: right;
+}
+
+.menuPF
+{
+    width: 100%;    
+    text-align: center;
+
+}
+
+.menuItem
+{
+    text-align: center;
+}
+
+#divSesionUsuario
+{
+    text-align: center;
+    padding-top: 5px;
+    position: fixed;
+    right: 60px;
+    top: 20px;
+    color: white;
+    font-size: 13px;
+}
+
+.panelNoBorder, .panelNoBorder tr, .panelNoBorder td{
+    border: hidden;
+    border-color: white;
+}
+
+
+.customTitleBar > .ui-panel-titlebar {
+    background: #485798;
+    color: white;
+}
+
+.titleBarAzul > .ui-panel-titlebar {
+    background: #4a89dc;
+    color: white;
+
+}
+
+.titleBarAzulSuave > .ui-panel-titlebar {
+    background: #5d9cec;
+    color: white;
+
+}
+
+.titleBarCeleste > .ui-panel-titlebar {
+    background: #4FC1E9;
+    color: white;
+   
+}
+
+.titleBarVerde > .ui-panel-titlebar {
+    background: #8cc152;
+    color: white;
+    
+}
+
+.titleBarVerdeSuave > .ui-panel-titlebar {
+    background: #a0d468;
+    color: white;
+    
+}
+
+.titleBarRojo > .ui-panel-titlebar {
+    background: #ff0000;
+    color: white;
+    
+}
+
+
+
+.titleBarMint > .ui-panel-titlebar {
+    background: #37bc9b;
+    color: white;
+    
+}
+
+.titleBarMintSuave > .ui-panel-titlebar {
+    background: #48cfad;
+    color: white;
+    
+}
+
+.titleCenter > .ui-panel-titlebar {    
+    text-align: center;
+}
+
+
+.filaRoja
+{
+    background: none repeat scroll 0 0 ;
+    background-color: #33ff33;
+    font-weight: bold;
+}
+
+.filaVerde
+{
+    background: none repeat scroll 0 0 ;
+    background-color: window;
+    font-weight: bold;    
+}
+
+.greenColoredPanel .ui-panel-titlebar 
+{
+    color: white;
+    background-image: none;
+    background-color: #009966;
+}
+
+.whiteColoredPanel .ui-panel-titlebar 
+{
+    color: #485798;
+    background-image: none;
+    background-color: white;
+}
+
+.ui-panelgrid td 
+{
+    padding: 22px 25px ;
+    background-color: white;
+}
+
+.user{
+    background-image: url("#{request.contextPath}/resources/img/logo.jpg");
+    height:16px;
+    width:16px;
+}
+
+.ui-botonBlanco.ui-state-default {
+    background-image: none;
+
+    background-color: #ffffff;
+    color: black;
+    font-weight: bold;
+    padding: 3px;
+    padding-bottom: 4px;
+}
+
+.ui-botonBlanco.ui-state-hover {
+    background-image: none;
+
+    background-color: #cccccc;
+    color: black;
+    font-weight: bold;
+    padding: 3px;
+    padding-bottom: 4px;
+}
+
+.ui-botonAzul.ui-state-default {
+    background-image: none;
+    background-image: url("#{request.contextPath}/resources/img/btn_img/btn_azul.png");
+    background-color: #666666;
+    color: white;
+    font-weight: bold;
+    padding: 3px;
+    padding-bottom: 4px;
+
+
+}
+.ui-botonAzul.ui-state-hover {
+    background-image: none;
+    background-image: url("#{request.contextPath}/resources/img/btn_img/btn_azul2.png");
+    background-color: #999999 ;
+    color: #485798;
+    font-weight: bold;
+    padding: 3px;
+    padding-bottom: 4px;
+}
+.ui-botonAzul.ui-state-active {
+    background-image: none;
+    background-image: url("#{request.contextPath}/resources/img/btn_img/btn_azul.png");
+    background-color: #666666;
+    color: white;
+    font-weight: bold;
+    padding: 3px;
+    padding-bottom: 4px;
+
+}
+
+.ui-botonVerde.ui-state-default {
+    background-image: none;
+    background-image: url("#{request.contextPath}/resources/img/btn_img/btn_verde.png");
+    background-color: #666666;
+    color: white;
+    font-weight: bold;
+    padding: 3px;
+    padding-bottom: 4px;
+}
+
+.ui-botonVerde.ui-state-hover {
+    background-image: none;
+    background-image: url("#{request.contextPath}/resources/img/btn_img/btn_verde2.png");
+    background-color: #999999 ;
+    color: #009966;
+    font-weight: bold;
+    padding: 3px;
+    padding-bottom: 4px;
+}
+
+.ui-botonConchaVino.ui-state-default {
+    background-image: none;
+    background-image: url("#{request.contextPath}/resources/img/btn_img/btn_conchaVino.png");
+    background-color: #666666;
+    color: white;
+    font-weight: bold;
+    padding: 3px;
+    padding-bottom: 4px;
+}
+
+.ui-botonCafe.ui-state-default {
+    background-image: none;
+    background-image: url("#{request.contextPath}/resources/img/btn_img/btn_cafe.png");
+    background-color: #666666;
+    color: white;
+    font-weight: bold;
+    padding: 3px;
+    padding-bottom: 4px;
+}
+
+.ui-botonAmarillo.ui-state-default {
+    background-image: none;
+    background-image: url("#{request.contextPath}/resources/img/btn_img/btn_blanco.png");
+    padding: 3px;
+    padding-bottom: 4px;
+}
+
+.ui-botonCeleste.ui-state-default {
+    background-image: none;
+    background-image: url("#{request.contextPath}/resources/img/btn_img/btn_celeste.png");
+    padding: 3px;
+    color: black;
+    padding-bottom: 4px;
+}
+
+.ui-botonEsmeralda.ui-state-default {
+    background-image: none;
+    background-image: url("#{request.contextPath}/resources/img/btn_img/btn_esmeralda.png");
+    padding: 3px;
+    color: black;
+    padding-bottom: 4px;
+}
+
+.ui-botonNaranja.ui-state-default {
+    background-image: none;
+    background-image: url("#{request.contextPath}/resources/img/btn_img/btn_naranja.png");
+    padding: 3px;
+    color: black;
+    padding-bottom: 4px;
+    font-weight: bold;
+}
+
+.ui-botonRojo.ui-state-default {
+    background-image: none;
+    background-image: url("#{request.contextPath}/resources/img/btn_img/btn_rojo.png");
+    padding: 3px;
+    color: white;
+    padding-bottom: 4px;
+    font-weight: lighter;
+}
+
+.btn_rojo.ui-state-default 
+{
+    background-color: #c9302c;
+    color: white;
+    padding: 3px;
+    padding-bottom: 4px;
+    font-weight: lighter;
+}
+
+.btn_rojo.ui-state-default 
+{
+    background-color: #c9302c;
+    color: white;
+    padding: 3px;
+    padding-bottom: 4px;
+    font-weight: lighter;
+}
+
+.btn_rojo.ui-state-hover
+{
+    background-color: #d9534f;
+    color: white;
+    padding: 3px;
+    padding-bottom: 4px;
+    font-weight: lighter;
+}
+
+
+.ui-dialog.ui-widget-content .ui-dialog-title
+{
+    padding-top: 5px;
+    font-size: 15px;  
+    color: white;
+}
+
+.ui-dialog.ui-widget-content .ui-dialog-titlebar
+{
+    padding: 0px 15px;
+    border-bottom: 1px solid #eee;
+    background-color: #485798;
+}
+
+//Me permite editar los campos td de los panel grid
+.ui-panelgrid td
+{
+    background-color: white;
+    padding: 22px 25px;
+
+}
+
+.filaCeleste
+{
+    background-color: #2fadd3 !important;
+    color: white!important;
+}
+
+.filaRoja
+{
+    background: none repeat scroll 0 0 ;
+    background-color: #c3322e;
+    color: white;
+}
+
+.filaVerde
+{
+    background: none repeat scroll 0 0 ;
+    background-color: #459b45!important;
+    font-weight: lighter!important;
+    color: white!important;
+}
+
+.filaAzul
+{
+    background-color: #2b6598!important;
+    color: white!important;
+    font-weight: lighter!important;
+}
+
+.filaNaranja
+{
+    background-color: #ec9922;
+    color: white;
+
+}
+
+.filaNegra
+{
+    background-color: black;
+    color: white;
+}
+
+.filaGris
+{
+    background-color: #666666;
+    color: white;
+}
+
+
+
+/////////////////// BOTON AZUL ///////////////////////
+
+.btn_azul.ui-state-active {
+}
+
+.btn_azul.ui-state-default 
+{
+    background-image: none;
+    background-color: #4A89DC;
+    color: white;
+    padding: 3px;
+    padding-bottom: 4px;
+    font-weight: lighter;
+    
+    font-size: 14px;
+}
+
+.btn_azul.ui-state-hover
+{
+    background-color: #5d9cec;
+    color: white;
+    padding: 3px;
+    padding-bottom: 4px;
+    font-weight: lighter;
+    background-image: none;
+    font-size: 14px;
+}
+
+//////////////////// BOTON TOMATE /////////////////////
+.btn_tomate.ui-state-active {
+}
+
+.btn_tomate.ui-state-default 
+{
+    background-image: none;
+    background-color: #E9573F;
+    color: white;
+    padding: 3px;
+    padding-bottom: 4px;
+    font-weight: lighter;
+    
+    font-size: 14px;
+}
+
+.btn_tomate.ui-state-hover
+{
+    background-color: #fC6E51;
+    color: white;
+    padding: 3px;
+    padding-bottom: 4px;
+    font-weight: lighter;
+    background-image: none;
+    font-size: 14px;
+}
+
+///////////////////// BOTON ROJO /////////////////
+.btn_rojo.ui-state-active {
+}
+
+.btn_rojo.ui-state-default 
+{
+    background-image: none;
+    background-color: #c9302c;
+    color: white;
+    padding: 3px;
+    padding-bottom: 4px;
+    font-weight: lighter;
+    
+    font-size: 14px;
+}
+
+.btn_rojo.ui-state-hover
+{
+    background-color: #d9534f;
+    color: white;
+    padding: 3px;
+    padding-bottom: 4px;
+    font-weight: lighter;
+    background-image: none;
+    
+}
+
+////////////////////////BOTON VERDE////////////////////
+
+.btn_verde.ui-state-active {
+}
+
+.btn_verde.ui-state-default 
+{
+    background-image: none;
+    background-color: #8CC152;
+    color: white;
+    padding: 3px;
+    padding-bottom: 4px;
+    font-weight: lighter;
+    
+    font-size: 14px;
+}
+
+.btn_verde.ui-state-hover
+{
+    background-color: #A0D468;
+    color: white;
+    padding: 3px;
+    padding-bottom: 4px;
+    font-weight: lighter;
+    background-image: none;
+    font-size: 14px;
+}
+
+///////////////////////// BOTON MINT ////////////////////
+.btn_mint.ui-state-active {
+}
+
+.btn_mint.ui-state-default 
+{
+    background-image: none;
+    background-color: #37bc9b;
+    color: white;
+    padding: 3px;
+    padding-bottom: 4px;
+    font-weight: lighter;
+    
+    font-size: 14px;
+}
+
+.btn_mint.ui-state-hover
+{
+    background-color: #48cfad;
+    color: white;
+    padding: 3px;
+    padding-bottom: 4px;
+    font-weight: lighter;
+    background-image: none;
+    font-size: 14px;
+}
+
+////////////////////////BOTON CELESTE////////////////////
+
+.btn_celeste.ui-state-active {
+}
+
+.btn_celeste.ui-state-default 
+{
+    background-image: none;
+    background-color: #3bafda;
+    color: white;
+    padding: 3px;
+    padding-bottom: 4px;
+    font-weight: lighter;
+    
+    font-size: 14px;
+}
+
+.btn_celeste.ui-state-hover
+{
+    background-color: #4fc1e9;
+    color: white;
+    padding: 3px;
+    padding-bottom: 4px;
+    font-weight: lighter;
+    background-image: none;
+    font-size: 14px;
+}
+
+///////////////////////// BOTON MINT ////////////////////
+.btn_mint.ui-state-active {
+}
+
+.btn_mint.ui-state-default 
+{
+    background-image: none;
+    background-color: #37bc9b;
+    color: white;
+    padding: 3px;
+    padding-bottom: 4px;
+    font-weight: lighter;
+    
+    font-size: 14px;
+}
+
+.btn_mint.ui-state-hover
+{
+    background-color: #48cfad;
+    color: white;
+    padding: 3px;
+    padding-bottom: 4px;
+    font-weight: lighter;
+    background-image: none;
+    font-size: 14px;
+}
+
+.panelSinPadding .ui-widget-content .ui-panelgrid-cell
+{    
+    padding: 2px 4px 2px 2px !important;
+    
+}
+
+
+.bordePanel2 .ui-accordion .ui-accordion-header.ui-state-default {
+    margin-bottom: 2px;
+    border: 1px solid #E5E5E5;
+    background-color: black;
+}
+
+.tablaSinPadding tbody td{
+    padding: 1px !important;
+ 
+}
+

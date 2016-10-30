@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" 
+                xmlns:ui="http://java.sun.com/jsf/facelets" 
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:b="http://bootsfaces.net/ui"
+                template="/template/plantilladmin.xhtml">
+
+
+    <ui:define name="contenido" >
+        <div>
+            <h:form id="formPrincipal">
+                <p:panel header="Orden de Trabajo" style="width: 70%;margin: 0 auto" styleClass="titleBarMint"   >
+
+                    <p:spacer width="15px"/>
+
+                    <p:panelGrid columns="6" style="margin: 0 auto" styleClass="panelNoBorder" >
+
+
+
+                        <p:inputText
+
+                            size="20"
+                            id="txtCedulaRuc"                            
+                            value="#{ordenTrabajoMB.ordenTrabajo.cedulaRuc.cedulaRuc}" 
+                            onkeypress="return validarEnter(event, 'test');"
+                            placeholder="Ingrese la cedula o RUC"
+                            required="false" />
+
+                        <!-- Boton que abre un dialogo para buscar el cliente -->
+
+                        <p:commandButton partialSubmit="true"
+                                         styleClass="btn_mint"
+                                         process="
+                                         @this,
+                                         :formPrincipal:txtTotal,
+                                         :formPrincipal:datetime
+                                         :formPrincipal:txtAdelanto
+                                         :formPrincipal:txtObservaciones
+                                         "  
+                                         id="btnBuscarCliente"                                          
+                                         icon="fa fa-search"
+                                         actionListener="#{ordenTrabajoMB.buscarClienteDlg()}"  >
+
+                            <p:ajax event="dialogReturn" listener="#{ordenTrabajoMB.onClientChosen}" update="@form,panelGridDatosCliente" />
+                        </p:commandButton>
+
+                        <!-- Verifica si el cliente existe o no -->
+                        <p:remoteCommand 
+                            process="@this,
+                            :formPrincipal:txtCedulaRuc,
+                            :formPrincipal:txtTotal,
+                            :formPrincipal:datetime
+                            :formPrincipal:txtAdelanto
+                            :formPrincipal:txtObservaciones" 
+                            name="test" 
+                            actionListener="#{ordenTrabajoMB.validarCliente()}" 
+                            update="@form,panelGridDatosCliente">
+
+                        </p:remoteCommand>
+
+
+
+
+                    </p:panelGrid>
+
+                    <!--<p:separator />-->
+                    <p:spacer width="15px"/>
+
+                    <!-- Panel con los datos del cliente -->
+                    <p:panel header="Datos del Cliente" styleClass="titleBarMintSuave panelNoBorder" style="text-align: left" >
+                        <p:panelGrid id="panelGridDatosCliente" columns="4" style="margin: 0 auto;width: 90%" >
+                            <p:outputLabel value="Nombres:" />
+                            <p:outputLabel id="txtNombres" value="#{ordenTrabajoMB.ordenTrabajo.cedulaRuc.nombre}" style="font-weight: bold"  />
+
+                            <p:outputLabel value="Telefono:" />
+                            <p:outputLabel id="txtTelefono" value="#{ordenTrabajoMB.ordenTrabajo.cedulaRuc.telefono}" style="font-weight: bold"  />
+
+                            <p:outputLabel value="Direccion:" />
+                            <p:outputLabel id="txtDireccion" value="#{ordenTrabajoMB.ordenTrabajo.cedulaRuc.direccion}" style="font-weight: bold" />
+
+                            <p:outputLabel value="Correo:" />
+                            <p:outputLabel id="txtCorreo" value="#{ordenTrabajoMB.ordenTrabajo.cedulaRuc.correo}" style="font-weight: bold" />                        
+
+                        </p:panelGrid>
+                    </p:panel>
+
+                    <!-- Panel con los datos del trabajo a realizar -->
+                    <p:panel id="panelTrabajo" header="Datos del Trabajo" styleClass="titleBarMintSuave panelNoBorder">
+                        <p:messages autoUpdate="true" id="mensajeGeneral"/>
+                        <p:panelGrid id="panelDatosOrdenTrabajo" columns="9" style="margin: 0 auto;width: 90%" >
+                            <p:outputLabel value="Fecha Entrega:" />
+                            <p:calendar title="Fecha de Entrega del mantenimiento" onkeypress="return noProcesar(event);"  id="datetime"  pattern="dd/MM/yyyy HH:mm:ss" value="#{ordenTrabajoMB.ordenTrabajo.fechaEntrega}" >
+                                <p:clientValidator event="keyup"/>
+                            </p:calendar>
+
+                            <p:message for="datetime" display="icon" />
+
+                            <p:outputLabel value="Total" />
+                            <p:inputText 
+                                required="true"
+                                title="Total del mantenimiento"
+                                onkeypress="return noProcesar(event);"
+                                id="txtTotal" 
+                                style="width: 50px" 
+                                value="#{ordenTrabajoMB.ordenTrabajo.total}" >
+
+                                <p:clientValidator event="keyup"/>
+                            </p:inputText>
+
+                            <p:message for="txtTotal" display="icon" />
+
+                            <p:outputLabel value="Adelanto" />
+                            <p:inputText 
+                                required="true"
+                                title="Abono por mantenimiento" 
+                                onkeypress="return noProcesar(event);" 
+                                id="txtAdelanto" 
+                                style="width: 50px" 
+                                value="#{ordenTrabajoMB.ordenTrabajo.adelanto}" >
+                                <p:clientValidator event="keyup"/>
+                            </p:inputText>
+                            <p:message for="txtAdelanto" display="icon" />
+                        </p:panelGrid>
+
+                        <p:separator />
+
+                        <div style="text-align: center">
+                            <p:commandButton 
+                                styleClass="btn_azul"
+                                title="Agregar mas trabajos a la orden"
+                                partialSubmit="true" 
+                                process="@this"
+                                icon="fa fa-plus"
+                                value="Agregar Detalle" 
+                                actionListener="#{ordenTrabajoMB.abrirEquipoDialog()}" 
+                                update=":formDialogoDetalle"  
+                                style="margin: 0 auto;font-size: 13px" />
+                        </div>
+
+                    </p:panel>
+
+                    <!-- Tabla de los datos equipos para realizar la orden de trabajo-->
+                    <p:dataTable
+                        id="tablaDetalle"
+                        value="#{ordenTrabajoMB.ordenTrabajo.detalleOrdenTrabajoList}"
+                        var="detalle"
+                        >
+
+                        <p:column headerText="Nombre" style="width: 150px">
+                            <p:outputLabel value="#{detalle.equipo}"  />
+                        </p:column>
+
+                        <p:column headerText="Descripcion">
+                            <p:inputTextarea value="#{detalle.descripcion}" readonly="true" />
+                        </p:column>
+
+                        <p:column headerText="Problema">
+                            <p:inputTextarea  value="#{detalle.problema}" readonly="true" />
+                        </p:column>
+
+                        <p:column headerText="Trabajo Realizar">
+                            <p:inputTextarea  value="#{detalle.trabajoRealizar}" readonly="true" />
+                        </p:column>
+
+                        <p:column headerText="Precio" style="width: 70px">
+                            <p:inputText  value="#{detalle.precio}" readonly="true" style="width: 50px" />
+                        </p:column>                    
+
+                        <p:column headerText="Acciones" style="width: 120px">
+                            <p:commandButton 
+                                styleClass="ui-botonNaranja"
+                                partialSubmit="true" 
+                                process="@this" 
+                                icon="ui-icon-closethick" 
+                                actionListener="#{ordenTrabajoMB.eliminar(detalle)}" 
+                                update=":formPrincipal:txtTotal,:formPrincipal:tablaDetalle" >
+                                <p:confirm header="Confirmar" message="Quieres quitar el detalle?" icon="ui-icon-alert" />
+                            </p:commandButton>
+
+                            <p:commandButton
+                                styleClass="ui-botonCeleste"
+                                immediate="true" 
+                                icon="ui-icon-pencil" 
+                                actionListener="#{ordenTrabajoMB.abrirDialogoEditar(detalle)}"
+                                update=":formDialogoDetalleEdit" />
+
+                        </p:column>
+
+                    </p:dataTable>
+
+                    <p:panelGrid columns="1">
+                        <p:outputLabel value="Observaciones" />
+                        <p:inputTextarea id="txtObservaciones" value="#{ordenTrabajoMB.ordenTrabajo.observacion}" rows="4" cols="45" />
+                    </p:panelGrid>
+
+                    <p:panelGrid columns="3" style="margin: 0 auto" styleClass="panelNoBorder">
+                        <p:commandButton 
+                            icon="fa fa-floppy-o"
+                            styleClass="btn_verde"
+                            ajax="true"
+                            process="@this,txtTotal,txtAdelanto,datetime"  
+                            validateClient="true"
+                            value=" Grabar" 
+                            actionListener="#{ordenTrabajoMB.grabarOrdenTrabajo()}" 
+                            update="panelDatosOrdenTrabajo,mensajeGeneral" >
+
+
+                            <p:confirm header="Confirmar" message="Esta seguro que quiere grabar la orden de trabajo?" icon="ui-icon-alert" />
+
+                        </p:commandButton>
+                        <p:commandButton icon="fa fa-ban" value=" Cancelar " styleClass="btn_rojo" />
+                        <p:commandButton styleClass="btn_tomate" icon="fa fa-star-half-o" immediate="true" ajax="false" value=" Nuevo " action="ordenTrabajo" />
+                    </p:panelGrid>
+                </p:panel>
+
+
+            </h:form>
+
+            <!-- Dialogo para agregar los equipos al items -->
+            <p:dialog header="Agregar Detalle" widgetVar="dlgDetalle" showEffect="explode" hideEffect="explode"  modal="true">
+                <h:form id="formDialogoDetalle" >
+                    <p:messages autoUpdate="true" id="mensajeGeneral2"/>
+                    <p:panelGrid id="panelDetalleAgregar" columns="6" styleClass="panelNoBorder">
+
+
+                        <p:selectOneMenu id="cmbServicios" value="#{ordenTrabajoMB.idServicioSeleccionado}" >
+                            <f:selectItem itemLabel="Escoja el servicio" itemValue="" />
+                            <f:selectItems itemValue="#{servicio.codigoServicio}"  itemLabel="#{servicio.nombre}" var="servicio" value="#{ordenTrabajoMB.servicios}" />                                
+                            <p:ajax event="change" listener="#{ordenTrabajoMB.cargarCategoriasServicios()}" update=":formDialogoDetalle:cmbCategoria"/>
+                        </p:selectOneMenu>
+                        <p:spacer/>
+
+
+
+
+                        <p:selectOneMenu id="cmbCategoria" value="#{ordenTrabajoMB.idCategoriaSeleccionado}" >
+                            <f:selectItem itemLabel="Escoja la Categoria: " itemValue="" />
+                            <f:selectItems itemValue="#{categoria.idCategoriaTrabajo}"  itemLabel="#{categoria.nombre}" var="categoria" value="#{ordenTrabajoMB.categorias}" />                                
+                            <p:ajax event="change" listener="#{ordenTrabajoMB.cargarDatosCategoria()}" update=":formDialogoDetalle:txtPrecio,:formDialogoDetalle:txtTrabajoRealizar,:formDialogoDetalle:txtProblema" />
+                        </p:selectOneMenu>
+                        <p:spacer/>
+
+
+
+                        <p:inputText id="txtEquipo" value="#{ordenTrabajoMB.detalleOrdenTrabajo.equipo}" required="true" placeholder="Ingrese el equipo" >
+                            <p:clientValidator event="keyup"/>
+                        </p:inputText>
+                        <p:message for="txtEquipo" display="icon" />
+
+
+                        <p:inputTextarea id="txtDescripcion" value="#{ordenTrabajoMB.detalleOrdenTrabajo.descripcion}" placeholder="Ingrse la descripcion del equipo" />
+                        <p:message for="txtDescripcion" display="icon" />
+
+                        <p:inputTextarea id="txtProblema" value="#{ordenTrabajoMB.detalleOrdenTrabajo.problema}" required="true" placeholder="Ingrese el problema" >
+                            <p:clientValidator event="keyup"/>
+                        </p:inputTextarea>
+                        <p:message for="txtProblema" display="icon" />
+
+                        <p:inputTextarea id="txtTrabajoRealizar" value="#{ordenTrabajoMB.detalleOrdenTrabajo.trabajoRealizar}" placeholder="Ingrese el trabajo a realizar" />
+                        <p:message for="txtTrabajoRealizar" display="icon" />
+
+
+
+
+                    </p:panelGrid>
+
+                    <p:separator/>
+                    <p:panelGrid columns="7" styleClass="panelNoBorder">
+
+                        <p:selectOneMenu id="cmbEmpleado" value="#{ordenTrabajoMB.nickEmpleadoSeleccionado}" required="true">
+                            <f:selectItems itemValue="#{empleado.nick}"  itemLabel="#{empleado.nick}" var="empleado" value="#{ordenTrabajoMB.empleados}" />                                
+                        </p:selectOneMenu>
+
+                        <p:inputText id="txtPrecio" value="#{ordenTrabajoMB.detalleOrdenTrabajo.precio}" required="true" style="width: 80px" placeholder="Precio" title="Precio" >
+                            <p:clientValidator event="keyup"/>
+                        </p:inputText>
+                        <p:message for="txtPrecio" display="icon" />
+
+                        <p:inputText id="txtDescuento" value="#{ordenTrabajoMB.detalleOrdenTrabajo.descuento}" placeholder="Descuento" style="width: 80px" title="descuento" >
+                            <p:clientValidator event="keyup"/>
+                        </p:inputText>
+                        <p:message for="txtDescuento" display="icon" />
+
+                    </p:panelGrid>
+
+                    <p:spacer height="10px"/>
+                    <div style="text-align: center">
+                        <p:commandButton 
+                            styleClass="ui-botonAzul"
+                            validateClient="true"  
+                            partialSubmit="true" 
+                            process=":formDialogoDetalle,:formPrincipal:txtTotal" 
+                            value="Agregar"
+                            actionListener="#{ordenTrabajoMB.agregarDetalle()}" 
+                            update=":formPrincipal:tablaDetalle,:formPrincipal:txtTotal,panelDetalleAgregar,mensajeGeneral2" />
+                        <p:spacer width="20px" />
+                        <p:commandButton immediate="true" onclick="PF('dlgDetalle').hide();" value="Cancelar" />
+                    </div>
+                </h:form>
+            </p:dialog>
+
+            <!-- Dialogo para editar los equipos al items -->
+            <p:dialog header="Editar Detalle" widgetVar="dlgDetalleEdit" showEffect="explode" hideEffect="explode"  modal="true">
+                <h:form id="formDialogoDetalleEdit" >
+                    <p:messages autoUpdate="true" id="mensajeGeneral2Edit"/>
+                    <p:panelGrid id="panelDetalleAgregarEdit" columns="6" styleClass="panelNoBorder">
+
+                        <p:outputLabel value="Servicios: " />
+
+                        <p:selectOneMenu id="cmbServicios" value="#{ordenTrabajoMB.idServicioSeleccionado}" >
+                            <f:selectItem itemLabel="Escoja el servicio" itemValue="" />
+                            <f:selectItems itemValue="#{servicio.codigoServicio}"  itemLabel="#{servicio.nombre}" var="servicio" value="#{ordenTrabajoMB.servicios}" />                                
+                            <p:ajax event="change" listener="#{ordenTrabajoMB.cargarCategoriasServicios()}" update=":formDialogoDetalle:cmbCategoria"/>
+                        </p:selectOneMenu>
+                        <p:spacer/>
+
+
+
+                        <p:outputLabel value="Categoria: " />
+
+                        <p:selectOneMenu id="cmbCategoria" value="#{ordenTrabajoMB.idCategoriaSeleccionado}" >
+                            <f:selectItem itemLabel="Escoja la Categoria: " itemValue="" />
+                            <f:selectItems itemValue="#{categoria.idCategoriaTrabajo}"  itemLabel="#{categoria.nombre}" var="categoria" value="#{ordenTrabajoMB.categorias}" />                                
+                            <p:ajax event="change" listener="#{ordenTrabajoMB.cargarDatosCategoria()}" update=":formDialogoDetalle:txtPrecio,:formDialogoDetalle:txtTrabajoRealizar,:formDialogoDetalle:txtProblema" />
+                        </p:selectOneMenu>
+                        <p:spacer/>
+
+                        <p:outputLabel value="Nombre: " />
+                        <p:inputText id="txtEquipo" value="#{ordenTrabajoMB.detalleOrdenTrabajoEditar.equipo}" required="true" >
+                            <p:clientValidator event="keyup"/>
+                        </p:inputText>
+                        <p:message for="txtEquipo" display="icon" />
+
+                        <p:outputLabel value="Descripcion: " />
+                        <p:inputTextarea id="txtDescripcion" value="#{ordenTrabajoMB.detalleOrdenTrabajoEditar.descripcion}" />
+                        <p:message for="txtDescripcion" display="icon" />
+
+                        <p:outputLabel value="Problema: " />
+                        <p:inputTextarea id="txtProblema" value="#{ordenTrabajoMB.detalleOrdenTrabajoEditar.problema}" required="true" >
+                            <p:clientValidator event="keyup"/>
+                        </p:inputTextarea>
+                        <p:message for="txtProblema" display="icon" />
+
+                        <p:outputLabel value="Trabajo Realizar: " />
+                        <p:inputTextarea id="txtTrabajoRealizar" value="#{ordenTrabajoMB.detalleOrdenTrabajoEditar.trabajoRealizar}" />
+                        <p:message for="txtTrabajoRealizar" display="icon" />
+
+                        <p:outputLabel value="Empleado: " />
+                        <p:selectOneMenu id="cmbEmpleado" value="#{ordenTrabajoMB.nickEmpleadoSeleccionado}" required="true"  >
+                            <f:selectItem itemLabel="Asigne el empleado" itemValue="" />
+                            <f:selectItems itemValue="#{empleado.nick}"  itemLabel="#{empleado.nick}" var="empleado" value="#{ordenTrabajoMB.empleados}" />                                
+                        </p:selectOneMenu>
+                        <p:spacer/>
+
+
+                        <p:outputLabel value="Precio: " />
+                        <p:inputText id="txtPrecio" value="#{ordenTrabajoMB.detalleOrdenTrabajoEditar.precio}" style="width: 80px" >
+                            <p:clientValidator event="keyup"/>
+                        </p:inputText>
+                        <p:message for="txtPrecio" display="icon" />
+
+
+                    </p:panelGrid>
+                    <p:spacer height="10px"/>
+                    <div style="text-align: center">
+
+                        <p:commandButton validateClient="true"  partialSubmit="true" process=":formDialogoDetalleEdit,:formPrincipal:txtTotal" value="Editar" actionListener="#{ordenTrabajoMB.editarDetalle()}" update=":formPrincipal:tablaDetalle,:formPrincipal:txtTotal,panelDetalleAgregarEdit,mensajeGeneral2Edit" styleClass="ui-botonAzul" />
+                        <p:spacer width="20px" />
+                        <p:commandButton immediate="true" onclick="PF('dlgDetalleEdit').hide();" value="Cancelar" />
+                    </div>
+                </h:form>
+            </p:dialog>
+
+            <!-- Dialogo para informar que la orden de tarbajo se grabo correctamente -->
+            <p:dialog header="Orden de Trabajo Grabada" modal="true" widgetVar="dlgGrabado" showEffect="explode" hideEffect="bounce" height="100">
+                <p:panelGrid columns="1" styleClass="panelNoBorder" style="margin: 0 auto;text-align: center">
+                    <h:outputText value="Que desea hacer?" />
+                    <h:form target="_blank">                        
+                        <p:commandButton ajax="false" value="Imprimir" action="#{ordenTrabajoMB.generaPdf()}" />
+                    </h:form>
+                    <h:form>
+                        <p:commandButton ajax="false" value="Nuevo" action="ordenTrabajo" >                            
+                        </p:commandButton>
+                    </h:form>
+                </p:panelGrid>
+            </p:dialog>
+
+            <!-- Dialogo de confirmacion para agregar un nuevo Cliente -->
+            <p:dialog header="Agregar Cliente" widgetVar="confirmarCliente" modal="true">
+                <h:form>
+                    <h2>El cliente no existe</h2>
+                    <p:commandButton onclick="PF('confirmarCliente').hide();" value="Aceptar" styleClass="btn_azul"/>
+                    <p:commandButton actionListener="#{ordenTrabajoMB.crearNuevoCliente()}"  style="background-image: none;background-color: forestgreen" value="Nuevo Cliente" styleClass="btn_azul">
+                        <p:ajax event="dialogReturn" listener="#{ordenTrabajoMB.onClientChosen}" update=":formPrincipal" />
+                    </p:commandButton>                        
+
+                </h:form>
+            </p:dialog>
+
+
+
+
+            <h:form >
+                <p:confirmDialog 
+                    global="true" 
+                    showEffect="fade" 
+                    hideEffect="fade" 
+                    >
+
+                    <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                </p:confirmDialog>
+            </h:form>
+        </div>
+
+
+
+    </ui:define>
+</ui:composition>

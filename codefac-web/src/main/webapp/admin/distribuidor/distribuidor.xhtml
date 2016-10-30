@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" 
+                xmlns:ui="http://java.sun.com/jsf/facelets" 
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:b="http://bootsfaces.net/ui"
+                template="/template/plantilladmin.xhtml">
+
+
+    <ui:define name="contenido" >
+        <h4 class="titulo" style="text-align: center">Gestionar Distribuidores</h4>
+        <p:panel >
+
+            <!-- Formulario para manejar la tabla de datos y los botones de crear y editar -->
+            <h:form id="formTabla">
+                <p:remoteCommand name="onload" action="#{distribuidorGestionMB.verificarDialogo()}" autoRun="true" />
+
+                <p:growl id="growl" showDetail="true" sticky="false" life="2000" />  
+
+                <p:dataTable
+                    widgetVar="widTablaDistribuidor"
+                    id="tablaDistribuidor"
+                    rows="15"
+                    rowsPerPageTemplate="15,20,25"
+                    paginator="true"
+                    value="#{distribuidorGestionMB.listaDistribuidor}"
+                    var="distribuidor"
+                    rowKey="#{distribuidor.ruc}"
+                    selectionMode="single"
+                    selection="#{distribuidorGestionMB.distribuidorSeleccionado}">
+
+                    >
+
+                    <p:ajax event="rowSelect" listener="#{distribuidorGestionMB.onRowSelect}" update=":formTabla:growl"/>
+
+                    <f:facet name="header" >
+                        <p:commandButton title="Agregar Distribuidor"  icon="fa fa-plus" styleClass="btn_azul" actionListener="#{distribuidorGestionMB.mostrarNuevoDistribuidor()}" update=":formNuevo" />
+                        <p:commandButton title="Editar Distribuidor" icon="fa fa-pencil" styleClass="btn_tomate" actionListener="#{distribuidorGestionMB.mostrarEditarDistribuidor()}" update=":formEditar" />
+                    </f:facet>
+
+                    <p:column headerText="RUC" filterBy="#{distribuidor.ruc}" filterMatchMode="contains"  style="width: 100px">
+                        <p:outputLabel value="#{distribuidor.ruc}" />
+                    </p:column>
+
+                    <p:column headerText="Nombre" filterBy="#{distribuidor.nombre}" filterFunction="#{filtroMB.filterByName}"  filterMatchMode="contains">
+                        <p:outputLabel value="#{distribuidor.nombre}"  />
+                    </p:column>
+
+                    <p:column headerText="Direccion">
+                        <p:outputLabel value="#{distribuidor.direccion}" />
+                    </p:column>
+
+                    <p:column headerText="Telefono">
+                        <p:outputLabel value="#{distribuidor.telefono}" />
+                    </p:column>
+
+                    <p:column headerText="Correo">
+                        <p:outputLabel value="#{distribuidor.correo}" />
+                    </p:column>
+
+                    <p:column headerText="Ciudad">
+                        <p:outputLabel value="#{distribuidor.ciudad}" />
+                    </p:column>
+
+                    <p:column style="width: 60px">
+                        <p:commandButton 
+                            style="padding: 0px"
+                            oncomplete="PF('widTablaDistribuidor').filter();"
+                            styleClass="btn_rojo"
+                            icon="fa fa-trash-o"
+                            title="Eliminar Distribuidor"
+                            actionListener="#{distribuidorGestionMB.eliminar(distribuidor)}" 
+                            update=":formTabla:tablaDistribuidor" >
+                            <p:confirm header="Confirmacion" message="Estas tu seguro?" icon="ui-icon-alert" />
+                        </p:commandButton>
+                    </p:column>
+                </p:dataTable>
+            </h:form> 
+
+            <!-- Formulario para grabar -->
+            <h:form id="formNuevo">
+                <p:dialog id="dlgNuevo" widgetVar="nuevoDistribuidor" header="Nuevo Distribuidor" modal="true"  >
+                    <p:messages />
+                    <p:panelGrid columns="6" id="panelGrid" styleClass="panelNoBorder">
+                        <p:outputLabel for="disRuc" value="RUC :" />
+
+                        <p:inputText id="disRuc" onkeypress="return noProcesar(event);" value="#{distribuidorGestionMB.distribuidor.ruc}" required="true" requiredMessage="RUC necesario">
+                            <p:ajax event="blur" listener="#{distribuidorGestionMB.verificarDistribuidorExiste()}"  />
+                            <p:ajax  event="keyup" />
+                        </p:inputText>
+
+                        <p:message for="disRuc" display="icon" />                  
+
+                        <p:outputLabel for="disNombre" value="Nombre:" />
+                        <p:inputText id="disNombre" onkeypress="return noProcesar(event);" value="#{distribuidorGestionMB.distribuidor.nombre}" required="true" requiredMessage="Nombre necesario" >
+                            <p:ajax  event="keyup" />
+                        </p:inputText>
+                        <p:message for="disNombre" display="icon" /> 
+
+                        <p:outputLabel for="disCiudad" value="Ciudad" />
+                        <p:inputText id="disCiudad" onkeypress="return noProcesar(event);" value="#{distribuidorGestionMB.distribuidor.ciudad}" />
+                        <p:message for="disCiudad" display="icon" />
+
+                        <p:outputLabel for="disDireccion" value="Direccion:" />
+                        <p:inputText id="disDireccion" onkeypress="return noProcesar(event);" value="#{distribuidorGestionMB.distribuidor.direccion}" />
+                        <p:message for="disDireccion" display="icon" />   
+
+                        <p:outputLabel for="disTelefono" value="Telefono :" />
+                        <p:inputText id="disTelefono" onkeypress="return noProcesar(event);" value="#{distribuidorGestionMB.distribuidor.telefono}" required="true" requiredMessage="Telefono necesario"/>
+                        <p:message for="disTelefono" display="icon" />
+
+
+                        <p:outputLabel for="disContacto" value="Contacto :" />
+                        <p:inputText id="disContacto" onkeypress="return noProcesar(event);" value="#{distribuidorGestionMB.distribuidor.contacto}" />
+                        <p:message for="disContacto" display="icon" />
+
+
+                        <p:outputLabel for="tipoPago" value="Tipo de pagos" />
+                        <p:selectOneMenu id="tipoPago" value="#{distribuidorGestionMB.distribuidor.tipoPago}" style="width:180px" >
+                            <f:selectItem itemLabel="Efectivo" itemValue="Efectivo" />
+                            <f:selectItem itemLabel="Crédito" itemValue="Credito" />
+                        </p:selectOneMenu>
+                        <p:message for="tipoPago" display="icon" />  
+
+                        <p:outputLabel for="disCorreo" value="Correo :" />
+                        <p:inputText id="disCorreo" onkeypress="return noProcesar(event);" value="#{distribuidorGestionMB.distribuidor.correo}"/>
+                        <p:message for="disCorreo" display="icon" />
+
+                        <p:outputLabel for="disNotas" value="Notas" />
+                        <p:inputTextarea id="disNotas" onkeypress="return noProcesar(event);" value="#{distribuidorGestionMB.distribuidor.notas}" style="width: 250px;" readonly="#{pruebaBean.enDetalles}"/>
+                        <p:message for="disNotas" display="icon" />
+
+                    </p:panelGrid>
+
+                    <f:facet name="footer">
+                        <div style="text-align: center">
+                            <p:commandButton 
+                                validateClient="true"
+                                process="@this,disRuc,disNombre,disCiudad,disDireccion,disTelefono,disDireccion,disTelefono,disContacto,tipoPago,disCorreo,disNotas"
+                                styleClass="ui-botonAzul"
+                                value="Aceptar" 
+                                icon="ui-icon-disk"    
+                                actionListener="#{distribuidorGestionMB.grabar()}"
+                                update="@form,:formTabla:tablaDistribuidor"
+                                />
+
+                            <p:commandButton 
+                                styleClass="ui-botonRojo"
+                                value="Cancelar" 
+                                immediate="true" 
+                                action="#{distribuidorGestionMB.cancelar()}" 
+                                />                        
+                        </div>
+                    </f:facet>
+
+
+                </p:dialog>
+            </h:form> 
+
+            <!-- Formulario para editar -->
+            <h:form id="formEditar">
+                <p:dialog id="dlgEditar" widgetVar="editarDistribuidor" header="Editar Distribuidor" modal="true"  >
+                    <p:panelGrid columns="6" id="panelGrid" styleClass="panelNoBorder">
+                        <p:outputLabel for="disRuc" value="RUC :" />
+
+                        <p:inputText id="disRuc" onkeypress="return noProcesar(event);" value="#{distribuidorGestionMB.distribuidorSeleccionado.ruc}" required="true" requiredMessage="RUC necesario" readonly="true">
+                        </p:inputText>
+
+                        <p:message for="disRuc" />                  
+
+                        <p:outputLabel for="disNombre" value="Nombre:" />
+                        <p:inputText id="disNombre" onkeypress="return noProcesar(event);" value="#{distribuidorGestionMB.distribuidorSeleccionado.nombre}" required="true" requiredMessage="Nombre necesario"/>
+                        <p:message for="disNombre" /> 
+
+                        <p:outputLabel for="disCiudad" value="Ciudad" />
+                        <p:inputText id="disCiudad" onkeypress="return noProcesar(event);" value="#{distribuidorGestionMB.distribuidorSeleccionado.ciudad}"  />
+                        <p:message for="disCiudad" />
+
+                        <p:outputLabel for="disDireccion" value="Direccion:" />
+                        <p:inputText id="disDireccion" onkeypress="return noProcesar(event);" value="#{distribuidorGestionMB.distribuidorSeleccionado.direccion}" />
+                        <p:message for="disDireccion" />   
+
+                        <p:outputLabel for="disTelefono" value="Telefono :" />
+                        <p:inputText id="disTelefono" onkeypress="return noProcesar(event);" value="#{distribuidorGestionMB.distribuidorSeleccionado.telefono}" required="true" requiredMessage="Telefono necesario"/>
+                        <p:message for="disTelefono" />
+
+
+                        <p:outputLabel for="disContacto" value="Contacto :" />
+                        <p:inputText id="disContacto" onkeypress="return noProcesar(event);" value="#{distribuidorGestionMB.distribuidorSeleccionado.contacto}" />
+                        <p:message for="disContacto" />
+
+
+                        <p:outputLabel for="tipoPago" value="Tipo de pagos" />
+                        <p:selectOneMenu id="tipoPago" value="#{distribuidorGestionMB.distribuidorSeleccionado.tipoPago}" style="width:180px" >
+                            <f:selectItem itemLabel="Efectivo" itemValue="Efectivo" />
+                            <f:selectItem itemLabel="Crédito" itemValue="Credito" />
+                        </p:selectOneMenu>
+                        <p:message for="tipoPago" />  
+
+                        <p:outputLabel for="disCorreo" value="Correo :" />
+                        <p:inputText id="disCorreo" onkeypress="return noProcesar(event);" value="#{distribuidorGestionMB.distribuidorSeleccionado.correo}" />
+                        <p:message for="disCorreo" />
+
+                        <p:outputLabel for="disNotas" value="Notas" />
+                        <p:inputTextarea id="disNotas" onkeypress="return noProcesar(event);" value="#{distribuidorGestionMB.distribuidorSeleccionado.notas}" style="width: 250px;" readonly="#{pruebaBean.enDetalles}"/>
+                        <p:message for="disNotas" />
+
+                    </p:panelGrid>
+
+                    <f:facet name="footer">
+                        <div style="text-align: center">
+                            <p:commandButton 
+                                validateClient="true"
+                                ajax="false"
+                                value="Aceptar" 
+                                styleClass="ui-botonAzul"
+                                icon="ui-icon-disk"    
+                                actionListener="#{distribuidorGestionMB.editar()}"
+                                update="@form,:formTabla:tablaDistribuidor"
+                                />
+                            <p:commandButton 
+                                value="Cancelar" 
+                                immediate="true"
+                                styleClass="ui-botonRojo"
+                                action="#{distribuidorGestionMB.cancelarEditar()}" 
+                                update=":formTabla:growl,:formNuevo:dlgNuevo" />
+                        </div>
+                    </f:facet>
+
+                </p:dialog>
+            </h:form> 
+
+        </p:panel>
+
+        <!-- Dialogo de confirmacion -->
+        <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+            <p:commandButton value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+        </p:confirmDialog>
+
+    </ui:define>
+
+</ui:composition>

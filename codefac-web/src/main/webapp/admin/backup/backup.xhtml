@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" 
+                xmlns:ui="http://java.sun.com/jsf/facelets" 
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:b="http://bootsfaces.net/ui"
+                template="/template/plantilladmin.xhtml">
+
+
+    <ui:define name="contenido" >
+
+
+
+        <div style="text-align: center">
+            <h:form> 
+                <p:panel  header="Respaldo de la Base de Datos" style="width:60%;margin: 0 auto" styleClass="customTitleBar">
+                    <p:fieldset legend="Respaldo DB">
+                        <h:outputText style="resize: none" value="En este apartado puede realizar el respaldo de la Base de Datos del Sistema Codefac, 
+                                      La ubicación del archivo de Respaldo es la especificada por el Administrador,
+                                      Si presenta algun inconveniente comuníquese con el Administrador del Sistema"/>
+                    </p:fieldset>
+                    <p:separator/>
+                </p:panel>
+
+                <p:spacer/>
+                <p:commandButton value="Obtener Respaldos" 
+                                 actionListener="#{backupMB.descargar()}" 
+                                 update="@form"
+                                 styleClass="ui-botonAzul"
+                                 icon="fa fa-dropbox"
+                                 ajax="false"
+                                 onstart="PF('statusDialog').show()" 
+                                 onsuccess="PF('statusDialog').hide()">
+                    <p:fileDownload value="#{backupMB.file}" />
+                </p:commandButton>
+                <p:spacer/>
+                <p:panel header="Detalles" style="width:60%;margin: 0 auto"  styleClass="titleBarVerde panelNoBorder" >                 
+                    <p:outputLabel value="#{backupMB.lblMessage}" style="font-weight: bold"/>
+                </p:panel>
+            </h:form>
+
+            <p:dialog modal="true" widgetVar="statusDialog" header="Status" draggable="false" closable="false" resizable="false">
+                <p:graphicImage library="image" name="/util/waitIcon.gif" />
+                <p:outputLabel value="Procesando ..." />
+            </p:dialog>
+        </div>
+
+    </ui:define>
+</ui:composition>
+

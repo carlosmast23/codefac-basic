@@ -1,0 +1,768 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+        <title>Codefac</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+        <h:outputStylesheet library="css" name="estiloUsuario.css"/>
+        <h:outputScript name="validacionesJS.js" library="js" target="form"/>
+        <h:outputScript name="descarga.js" library="js" target="form"/>
+    </h:head>
+    <h:body>
+        <div id="cabecera">
+            <p:graphicImage library="img" name="bannerCodefacPeque.jpg"  styleClass="imagenCabecera" />
+            <p:graphicImage library="img" name="bannerAdminstrador.png"  styleClass="imagenCabecera2" />
+        </div >
+
+        <div id="divSesionUsuario">
+            <span>
+                Sesión iniciada por:
+                <p:outputLabel  value="#{sessionMB.nick==null ? 'Anonimo' : sessionMB.nick}"/>
+            </span>
+
+        </div>
+
+        <div id="menu" class="menuPanel">
+            <h:form id="menu" >
+                <p:growl id="messages"/>
+                <p:menubar>
+                    <p:submenu label="Clientes" icon="fa fa-user">
+                        <p:menuitem value="Gestionar" outcome="cliente"  icon="fa fa-pencil-square-o"/>
+                        <p:menuitem value="Buscar" outcome="buscarCliente" icon="fa fa-search" />
+                        <p:menuitem value="Reportes" outcome="reporteCliente" icon="fa fa-pie-chart" />
+                    </p:submenu>
+
+                    <p:submenu label="Distribuidores" icon="fa fa-truck">
+                        <p:menuitem value="Gestionar" outcome="distribuidor"  icon="fa fa-pencil-square-o" />
+                        <p:submenu label="Reportes" icon="fa fa-pie-chart">
+                            <p:menuitem value="Productos" outcome="reporDistriProd" icon="fa fa-shopping-basket"/>
+                        </p:submenu>
+                    </p:submenu>
+
+                    <p:submenu label="Productos" icon="fa fa-shopping-basket">
+                        <p:menuitem value="Gestionar" outcome="productoGestion" icon="fa fa-pencil-square-o" />
+                        <p:menuitem value="Agregar Inventario" outcome="editarInventario" icon="fa fa-plus-square" />
+                        <p:menuitem value="Stock Bajo" outcome="stockProductos" icon="fa fa-minus-square" />
+                        <p:menuitem value="Combos" outcome="gestionarCombo"  icon="fa fa-archive"/>
+                        <p:menuitem value="Reportes" outcome="reporteCatalogo"  icon="fa fa-pie-chart" />
+                    </p:submenu>
+
+                    <p:submenu label="Compras" icon="fa fa-shopping-cart">
+                        <p:menuitem value="Nuevo" outcome="compraAdmin"  icon="fa fa-plus-square" />
+                        <p:menuitem value="Gestionar" outcome="gestionarCompra"  icon="fa fa-pencil-square-o" />
+                    </p:submenu>
+
+                    <p:submenu label="Factura" icon="fa fa-sticky-note" >
+                        <p:menuitem value="Nueva" outcome="facturaAdmin"  icon="fa fa-plus-square" />
+                        <p:menuitem value="Devolución" outcome="notaCredito"  icon="fa fa-undo" />
+                        <p:menuitem value="Gestionar Facturas" outcome="gestionarVenta"  icon="fa fa-pencil-square-o" />
+                        <p:menuitem value="Gestionar Créditos" outcome="gestionarAbonos"  icon="fa fa-money" />
+                    </p:submenu>
+
+                    <p:submenu label="Orden Trabajo" icon="fa fa-sticky-note">
+                        <p:menuitem value="Nueva" outcome="ordenTrabajo"  icon="fa fa-plus-square" />
+                        <p:menuitem value="Gestionar" outcome="gestionarOrdenTrabajo"  icon="fa fa-pencil-square-o" />
+                        <p:menuitem value="Servicios" outcome="serviciosOrdenTrabajo"  icon="ui-icon-script" />
+
+
+                    </p:submenu>
+
+                    <p:submenu label="Proforma" icon="fa fa-sticky-note">
+                        <p:menuitem value="Nueva" outcome="proformaAdmn"  icon="fa fa-plus-square" />
+                    </p:submenu>
+
+                    <p:submenu label="Reportes" icon="fa fa-pie-chart">
+                        <p:menuitem value="Ventas Diarias" outcome="reporteVenta"  icon="fa fa-line-chart" />
+                    </p:submenu>
+
+                    <p:submenu label="Configuración" icon="fa fa-cogs">
+                        <p:menuitem value="General" icon="fa fa-sliders" outcome="configuracion"/>
+                        <p:menuitem value="Respaldos" icon="fa fa-dropbox" outcome="respaldo"/>
+                    </p:submenu>
+
+
+
+
+                    <f:facet name="options">
+
+                        <p:selectOneMenu id="city" value="#{adminMenuMB.opcionSeleccionado}" style="width:80px" >
+                            <p:ajax listener="#{adminMenuMB.cambiarOpciones()}" update="panelTablaProductos,panelTablaDistribuidor,panelTablaCliente" />
+                            <f:selectItem itemLabel="Productos" itemValue="producto" />                            
+                            <f:selectItem itemLabel="Cliente" itemValue="cliente" />                            
+                            <f:selectItem itemLabel="Distribuidor" itemValue="distribuidor" />                            
+                        </p:selectOneMenu>
+
+                        <p:commandButton
+                            id="btnBuscarGeneral"
+                            actionListener="#{adminMenuMB.cargarDatosBusqueda()}"
+                            styleClass="btn_verde"
+                            style="padding: 0px;vertical-align: top"
+                            icon="fa fa-search" />
+
+                        <p:overlayPanel id="moviePanel" for="btnBuscarGeneral" hideEffect="fade" dynamic="true" style="width:630px" >
+
+                            <!-- Tabla de los productos !-->
+                            <p:panel id="panelTablaProductos" visible="#{adminMenuMB.opcionSeleccionado eq 'producto'?'true':'false'}" styleClass="panelNoBorder">
+                                <p:dataTable                                    
+                                    style="text-align: left;vertical-align: top;"
+                                    rows="5"
+                                    value="#{adminMenuMB.catalagoProductoList}" 
+                                    var="catalogo"
+                                    rowStyleClass="#{adminMenuMB.devolverStock(catalogo) le 3?'filaNaranja':null}">
+
+                                    <p:column headerText="Codigo"  filterBy="#{catalogo.codigoProducto}" filterMatchMode="contains" style="width: 100px;background-color: #ffffff;color: #000000">
+                                        <p:outputLabel value="#{catalogo.codigoProducto}" />
+                                    </p:column>
+
+                                    <p:column headerText="Nombre" filterBy="#{catalogo.nombre}" filterMatchMode="contains" style="width: 100px;background-color: #ffffff;color: #000000" >
+                                        <p:outputLabel value="#{catalogo.nombre}" />
+                                    </p:column>
+
+                                    <p:column headerText="PVP" style="width: 60px;background-color: #ffffff;color: #000000">
+                                        <p:outputLabel value="#{calculosMB.incluirIva(catalogo.precio)}" />
+                                    </p:column>
+                                    <p:column headerText="P. Dist" style="width: 60px;background-color: #ffffff;color: #000000">
+                                        <p:outputLabel value="#{calculosMB.incluirIva(catalogo.precioMayorista)}" />
+                                    </p:column>
+                                    <p:column headerText="Ubi" style="width: 60px;background-color: #ffffff;color: #000000"  >
+                                        <p:outputLabel value="#{catalogo.ubicacion}" />
+                                    </p:column>
+                                    <p:column headerText="Stock" style="width: 40px">
+                                        <p:outputLabel value="#{adminMenuMB.devolverStock(catalogo)}" />
+                                    </p:column>
+
+                                </p:dataTable>
+                            </p:panel>
+
+                            <!-- Tabla de los Distribuidores!-->
+                            <p:panel id="panelTablaDistribuidor" visible="#{adminMenuMB.opcionSeleccionado eq 'distribuidor'?'true':'false'}" styleClass="panelNoBorder">
+                                <p:dataTable                                    
+                                    style="text-align: left;vertical-align: top"
+                                    rows="10"
+                                    value="#{adminMenuMB.distribuidorList}" 
+                                    var="distribuidor" >
+
+                                    <p:column headerText="RUC"  filterBy="#{distribuidor.ruc}" filterMatchMode="contains" style="width: 120px">
+                                        <p:outputLabel value="#{distribuidor.ruc}" />
+                                    </p:column>
+
+                                    <p:column headerText="Nombre" filterBy="#{distribuidor.nombre}" filterMatchMode="contains" >
+                                        <p:outputLabel value="#{distribuidor.nombre}" />
+                                    </p:column>
+
+                                    <p:column headerText="Telefono" style="width: 80px"  >
+                                        <p:outputLabel value="#{distribuidor.telefono}" />
+                                    </p:column>
+
+                                </p:dataTable>
+                            </p:panel>
+
+                            <!-- Tabla de los clientes !-->
+                            <p:panel id="panelTablaCliente" visible="#{adminMenuMB.opcionSeleccionado eq 'cliente'?'true':'false'}" styleClass="panelNoBorder">
+                                <p:dataTable                                    
+                                    style="text-align: left;vertical-align: top"
+                                    rows="10"
+                                    value="#{adminMenuMB.clienteList}" 
+                                    var="cliente" >
+
+                                    <p:column headerText="Cedula/RUC"  filterBy="#{cliente.cedulaRuc}" filterMatchMode="contains" style="width: 120px">
+                                        <p:outputLabel value="#{cliente.cedulaRuc}" />
+                                    </p:column>
+
+                                    <p:column headerText="Nombre" filterBy="#{cliente.nombre}" filterMatchMode="contains" >
+                                        <p:outputLabel value="#{cliente.nombre}" />
+                                    </p:column>
+
+                                    <p:column headerText="Telefono" style="width: 80px"  >
+                                        <p:outputLabel value="#{cliente.telefono}" />
+                                    </p:column>
+
+                                </p:dataTable>
+                            </p:panel>
+                        </p:overlayPanel>
+
+                        <p:commandButton                            
+                            action="#{sessionMB.cerrarSesion()}"  
+                            value="Salir"
+                            style="padding: 0px;vertical-align: top"
+                            styleClass="btn_rojo"
+                            icon="fa fa-sign-out" />
+
+                        <p:spacer width="22px"/>
+
+                        <p:graphicImage id="content" library="img" name="ayudaCodefac.png" style="width: 23px;vertical-align: top" />
+
+                        <p:overlayPanel id="toolTipContent" for="content" showEffect="blind" hideEffect="explode" showEvent="mouseover" hideEvent="mousedown"
+                                        dismissable="false" showCloseIcon="true" style="margin-right: 10px;margin-top: 20px;width: 600px"  >
+                            <p:panel style="text-align: left">
+
+                                <p:graphicImage library="img" name="ayudaCodefac.png" style="width: 25px" />
+                                <p:outputLabel value="Ayuda" style="font-size: 25px;padding-left: 15px" />
+
+                                <div style="height: 3px;background-color: #5eaade;margin-top: 3px" />
+
+
+                                <ui:insert name="ayuda"/>
+
+                                <f:facet name="footer" >
+                                    <p:outputLabel 
+
+                                        style="color: #485798;font-weight: bold;font-size: 11px"
+                                        value="Si desea mas información detallada puede visitar la seccion de ayuda." />
+                                </f:facet>
+
+                            </p:panel>
+
+                        </p:overlayPanel>
+
+                    </f:facet>
+
+                    <f:facet name="options"> 
+
+                    </f:facet>
+
+                </p:menubar>
+            </h:form>
+        </div>
+
+        <div id="contenido" class="panelContenido">
+            <ui:insert name="contenido"/>
+        </div>
+
+        <div id="piepagina">
+            <p:outputLabel value="Codefac © 2016 Todos los Derechos reservados por Codesoft "/>
+        </div>
+
+        <!--metodo que verifica si esta abierto la calculadora-->
+        <h:form id="formInit">
+            <p:remoteCommand name="onload" actionListener="#{stackAdminMB.iniciarWidget()}" autoRun="true" />            
+        </h:form>
+
+        <!-- SubMenu rapido -->
+        <h:form id="formMenu2" > 
+            <p:stack id="idMenuRapido" icon="#{resource['img:menu/ico_canasta.png']}" expanded="false" closeSpeed="80" openSpeed="80">
+                <p:menuitem  value="Ayuda" icon="#{resource['img:menu/ico_codefac.png']}" url="#"  />                
+                <p:menuitem value="Calendario" icon="#{resource['img:menu/ico_calendario.png']}" actionListener="#{stackAdminMB.abrirWidget('dlgCalendario')}" update=":formMenu2:idMenuRapido"/>
+                <p:menuitem value="Notas" icon="#{resource['img:menu/nota.png']}" actionListener="#{stackAdminMB.abrirWidget('dlgNotas')}" update=":formMenu2:idMenuRapido" />
+                <p:menuitem value="Calculadora" icon="#{resource['img:menu/ico_calculadora.png']}" actionListener="#{stackAdminMB.abrirWidget('dlgCalculadora')}" update=":formMenu2:idMenuRapido"/>
+                <p:menuitem value="Ventas" icon="#{resource['img:menu/ico_notas.png']}" actionListener="#{stackAdminMB.abrirWidget('dlgDetalles')}" update=":formMenu2:idMenuRapido"/>
+            </p:stack>
+        </h:form>
+
+        <!-- Dialogo de la  Calculadora -->
+        <p:dialog 
+            styleClass="overlayDialog"
+            position="#{calcuUtilMB.x},#{calcuUtilMB.y}"
+            header="Calculadora"
+            widgetVar="dlgCalculadora" 
+            minHeight="40" 
+            showHeader="true"
+            resizable="false">
+
+            <p:ajax event="close"  listener="#{calcuUtilMB.handleClose}" />
+            <p:ajax event="move"   listener="#{calcuUtilMB.handleMove}" />
+
+
+            <h:form>
+                <h:panelGrid columns="4" cellpadding="1" cellspacing="0"  >
+                    <f:facet name="header">
+                        <h:panelGrid columns="1" cellpadding="0" cellspacing="0" style="border: 0;padding: 0;margin: 0">
+                            <p:inputTextarea 
+                                id="txtAreaExpresionCalcu"
+                                rows="2"
+                                onkeypress="return validarEnter(event, 'evaluarCalcuJS');"
+                                style="width: 140px;background-color:darkslategray ;color: white" 
+                                value="#{calcuUtilMB.textoCalculadora}" >                               
+                            </p:inputTextarea>
+
+                            <p:remoteCommand name="evaluarCalcuJS" actionListener="#{calcuUtilMB.evaluar()}" update="idResultadoCalcu" />
+                            <p:inputText id="idResultadoCalcu" style="width: 140px;background-color:darkslategray ;color: white;text-align: right" value="#{calcuUtilMB.resultado}" />
+                        </h:panelGrid>
+                    </f:facet>
+
+                    <p:commandButton actionListener="#{calcuUtilMB.presionarTecla('+')}" value="+" style="width: 35px" update="txtAreaExpresionCalcu" />
+                    <p:commandButton actionListener="#{calcuUtilMB.presionarTecla('-')}" value="-" style="width: 35px" update="txtAreaExpresionCalcu" />
+                    <p:commandButton actionListener="#{calcuUtilMB.presionarTecla('*')}" value="*" style="width: 35px" update="txtAreaExpresionCalcu" />
+                    <p:commandButton actionListener="#{calcuUtilMB.presionarTecla('/')}" value="/" style="width: 35px" update="txtAreaExpresionCalcu" />
+
+                    <p:commandButton actionListener="#{calcuUtilMB.presionarTecla('0')}" value="0" style="width: 35px" update="txtAreaExpresionCalcu" />
+                    <p:commandButton actionListener="#{calcuUtilMB.presionarTecla('1')}" value="1" style="width: 35px" update="txtAreaExpresionCalcu"/>
+                    <p:commandButton actionListener="#{calcuUtilMB.presionarTecla('2')}" value="2" style="width: 35px" update="txtAreaExpresionCalcu"/>
+                    <p:commandButton actionListener="#{calcuUtilMB.presionarTecla('3')}" value="3" style="width: 35px" update="txtAreaExpresionCalcu"/>
+
+                    <p:commandButton actionListener="#{calcuUtilMB.presionarTecla('4')}" value="4" style="width: 35px" update="txtAreaExpresionCalcu"/>
+                    <p:commandButton actionListener="#{calcuUtilMB.presionarTecla('5')}" value="5" style="width: 35px" update="txtAreaExpresionCalcu"/>
+                    <p:commandButton actionListener="#{calcuUtilMB.presionarTecla('6')}" value="6" style="width: 35px" update="txtAreaExpresionCalcu"/>
+                    <p:commandButton actionListener="#{calcuUtilMB.presionarTecla('7')}" value="7" style="width: 35px" update="txtAreaExpresionCalcu"/>
+
+                    <p:commandButton actionListener="#{calcuUtilMB.presionarTecla('8')}" value="8" style="width: 35px" update="txtAreaExpresionCalcu"/>
+                    <p:commandButton actionListener="#{calcuUtilMB.presionarTecla('9')}" value="9" style="width: 35px" update="txtAreaExpresionCalcu"/>
+                    <p:commandButton actionListener="#{calcuUtilMB.presionarTecla('.')}" value="." style="width: 35px" update="txtAreaExpresionCalcu"/>
+                    <p:commandButton actionListener="#{calcuUtilMB.evaluar()}" value="=" style="width: 35px" update="idResultadoCalcu,txtAreaExpresionCalcu"/>
+                </h:panelGrid>
+            </h:form>
+        </p:dialog>
+
+        <!-- Dialogo del calendario -->
+        <p:dialog  
+            position="#{calendarioUtilMB.x},#{calendarioUtilMB.y}"
+            widgetVar="dlgCalendario" 
+            width="285"
+            height="210"
+            style="font-size:12px;background-color: #ffffff;background-image: none;padding: 0px;margin: 0px"
+            resizable="false"
+            header="Calendario">
+
+
+            <p:ajax event="close"  listener="#{calendarioUtilMB.handleClose}" />
+            <p:ajax event="move"   listener="#{calendarioUtilMB.handleMove}" />
+
+            <h:form id="idCalendario">
+                <p:calendar id="inline" mode="inline" style="border: 0px;width: 100px" />
+            </h:form>
+        </p:dialog>
+
+        <!-- Dialogo de las Notas Rapidas -->
+        <p:dialog  
+            header="Notas"
+            position="#{notaUtilMB.x},#{notaUtilMB.y}"
+            widgetVar="dlgNotas" 
+            minHeight="40" 
+            style="font-size:12px;background-color: #ffff99;background-image: none;padding: 0px;margin: 0px"
+            resizable="false">
+
+            <p:ajax event="move"   listener="#{notaUtilMB.handleMove}" />
+            <p:ajax event="close"  listener="#{notaUtilMB.handleClose}" />
+
+            <h:form id="formNotaDialogo" onsubmit="return false;">
+                <p:inputTextarea id="txtInput"
+                                 rows="7"
+                                 value="#{notaUtilMB.sesion.usuarioLogin.notas}" 
+                                 style="background-color: #ffff99;color: black;margin: 0px;border: 0px;font-size: 11px">
+
+                    <p:ajax event="blur" listener="#{notaUtilMB.grabarNota}"/>
+
+                </p:inputTextarea>
+            </h:form>
+
+        </p:dialog>
+
+
+        <!-- Dialogo de las Ventas -->
+        <p:dialog  widgetVar="dlgVentas"
+                   minHeight="40"
+                   width="500px" 
+                   style="font-size:12px;padding: 0px;margin: 0px" 
+                   header="Ventas Diarias"
+                   resizable="false">
+            <h:form id="formCompraV">
+
+                <p:dataTable var="catalogo" value="#{ventasDiariasMB.catalogosLista}"
+                             rows="10"
+                             selectionMode="single" 
+                             scrollable="true" 
+                             scrollHeight="100"  
+                             rowKey="#{catalogo.codigoProducto}"
+                             selection="#{ventasDiariasMB.catalogoSeleccionado}">
+                    <p:ajax event="rowSelect" listener="#{ventasDiariasMB.onRowSelect(event)}" update=":formGeneralV,:formEspecificoV"/>
+                    <p:ajax event="rowUnselect" listener="#{ventasDiariasMB.onRowUnSelect(event)}"/>
+
+                    <p:column headerText="Código" filterBy="#{catalogo.codigoProducto}" filterFunction="#{filtroMB.filterByName}" filterMatchMode="contains" >
+                        <h:outputText value="#{catalogo.codigoProducto}" />
+                    </p:column>
+                    <p:column headerText="Nombre" filterBy="#{catalogo.nombre}" filterFunction="#{filtroMB.filterByName}" filterMatchMode="contains">
+                        <h:outputText value="#{catalogo.nombre}" />
+                    </p:column>
+                    <p:column headerText="Precio">
+                        <h:outputText value="#{catalogo.precio}" />
+                    </p:column>
+                </p:dataTable>
+
+            </h:form>
+
+            <p:dialog  id="dlgInformacionV" header="Ingrese la Cantidad" widgetVar="infProducto" height="auto"
+                       resizable="false">
+                <h:form id="formGeneralV">
+                    <h:panelGrid columns="5" styleClass="panelNoBorder" >
+                        <p:outputLabel  value="Stock : #{ventasDiariasMB.stock}"/>
+                        <p:inputText id="cantidadP" value="#{ventasDiariasMB.cantidadComprar}" required="true" />
+                        <p:commandButton  icon="fa fa-plus-square"
+                                          styleClass="btn_azul" 
+                                          actionListener="#{ventasDiariasMB.venta('catalogo')}" ajax="true" update=":formGeneralV,:formDetallesV,:formDetallesVentas:idDetallesFactura,:formDetallesVentasFactura:idDetallesFacturaFactura,:formDetallesVentas:panelTotales"/>
+                        <p:outputLabel value="#{ventasDiariasMB.msjStock}" style="color: darkred"/>
+
+                    </h:panelGrid>
+                </h:form>
+            </p:dialog>
+
+
+
+            <p:dialog  id="dlgInformacionVE" header="Agregar Código Único" widgetVar="infProductoE" height="auto"
+                       resizable="false">
+                <h:form id="formEspecificoV">
+                    <h:panelGrid columns="6" styleClass="panelNoBorder" >
+                        <p:outputLabel  value="Código Único : "/>
+                        <p:inputText id="codPEspec" value="#{ventasDiariasMB.codPEspe}" 
+                                     required="true"/>
+                        <p:commandButton  icon="fa fa-plus-square"
+                                          styleClass="btn_azul" 
+                                          actionListener="#{ventasDiariasMB.venta('catalogo')}" ajax="true" />
+                        <p:outputLabel  value="#{ventasDiariasMB.msjCodUnico}" style="color: darkred"/>
+                        <p:message for="codPEspec" />
+                        <p:commandButton icon="fa fa-times" styleClass="btn_tomate" onclick="PF('dlgInformacionVE').hide()" />
+                    </h:panelGrid>
+                </h:form>
+            </p:dialog>
+
+            <p:dialog  id="dlgServicioV" header="Cantidad" widgetVar="infServicioV" height="auto"
+                       resizable="false">
+                <h:form id="formServicioV">
+                    <p:messages id="msgServicioV" />
+                    <h:panelGrid columns="6" styleClass="panelNoBorder" >
+                        <p:outputLabel  value="Cantidad : "/>
+                        <p:inputText id="codServicioV" value="#{ventasDiariasMB.cantidaServicio}" required="true"/>
+                        <p:commandButton  icon="fa fa-plus-square"
+                                          styleClass="btn_azul" 
+                                          actionListener="#{ventasDiariasMB.venta('catalogo')}" ajax="true" />
+                        <p:message for="codServicioV" />
+                        <p:commandButton icon="fa fa-times" styleClass="btn_tomate" onclick="PF('infServicioV').hide()" />
+                    </h:panelGrid>
+                </h:form>
+            </p:dialog>
+        </p:dialog>
+
+
+        <!-- Dialogo de los Detalles -->
+
+        <p:dialog widgetVar="dlgDetalles"
+                  position="#{ventasDiariasMB.x},#{ventasDiariasMB.y}"
+                  minHeight="30" 
+                  width="200px" 
+                  style="font-size:12px;background-color: white;background-image: none;padding: 0px;margin: 0px" 
+                  header="Ventas Diarias"
+                  resizable="false">
+            <p:ajax event="close"  listener="#{ventasDiariasMB.handleClose}" />
+            <p:ajax event="move"   listener="#{ventasDiariasMB.handleMove}" />
+            <h:form id="formDetallesV">
+                <h:panelGrid columns="2" styleClass="panelNoBorder" cellpadding="0" cellspacing="1" style="background-color: white">
+                    <h:panelGrid columns="2" cellpadding="1" cellspacing="0">
+
+                        <f:facet name="header">
+                            <p:commandButton styleClass="btn_verde" title="Agregar Ordenes Trabajo" icon="fa fa-tablet" style="background-image: none;background-color: #33ff33;height: 30px;width: 100%" onclick="PF('dlgOrdenesTrabajo').show();"  />    
+                        </f:facet>
+                        <p:commandButton styleClass="btn_verde" title="Agregar Productos" icon="fa fa-cart-plus" style="background-image: none;background-color: #3366ff;height: 30px" onclick="PF('dlgVentas').show();"  />
+                        <p:commandButton styleClass="btn_verde" title="Agregar Servicios" icon="fa fa-plus-square" style="background-image: none;background-color: #ffff00;height: 30px" onclick="PF('dlgVentasServicios').show();"  />
+
+                        <p:commandButton icon="fa fa-sticky-note-o" title="Facturar Ventas Diarias" styleClass="btn_tomate" style="background-image: none;background-color: #009966;height: 30px" onclick="PF('dlgDetallesVentasDiariasFactura').show();"/>
+                        <p:commandButton icon="fa fa-search" title="Detalles Ventas Diarias" styleClass="btn_mint" style="background-image: none;background-color: tomato;height: 30px" onclick="PF('dlgDetallesVentasDiarias').show();" />
+
+                    </h:panelGrid>
+
+                    <h:panelGrid columns="1" style="font-size: 12px;width: 100%" >
+                        <f:facet name="header">
+                            <p:outputLabel value="Total Venta:" />    
+                        </f:facet>
+
+
+                        <p:inputText value="#{calculosMB.redondeoSuperior(ventasDiariasMB.total)} $" style="font-weight: bold;color: #ffffff;background-color: tomato;width: 83px;text-align: center"/>                    
+
+
+                        <f:facet name="footer">
+                            <p:outputLabel value="Items: " style="color: #485798;font-weight: bold"/> 
+                            <p:inputText value="#{ventasDiariasMB.detallesVenta.size()}" style="background-color: #485798; color: #ffffff;font-weight: bold;width: 30px;height: 10px;text-align: center" />
+                        </f:facet> 
+
+                    </h:panelGrid>
+
+
+                </h:panelGrid>
+            </h:form>
+        </p:dialog >
+
+
+        <!--dialgo detalles de ventas diarias -->
+        <p:dialog widgetVar="dlgDetallesVentasDiarias"
+                  minHeight="30" 
+                  width="700px"
+                  style="font-size:12px;background-color: white;background-image: none;padding: 0px;margin: 0px" 
+                  header="Detalles Ventas Diarias"
+                  resizable="false">
+            <h:form id="formDetallesVentas">
+                <p:panel id="idDetallesFactura" >
+                    <p:dataTable var="detallesVenta" 
+                                 value="#{ventasDiariasMB.detallesVenta}" 
+                                 id="tablaDetallesFactura" 
+                                 scrollable="true" 
+                                 scrollHeight="150"> 
+
+                        <p:column headerText="Cantidad" style="text-align: left;width:70px">
+                            <h:outputText value="#{detallesVenta.cantidad}" />
+                        </p:column>
+                        <p:column headerText="Código" style="text-align: left">
+                            <h:outputText value="#{detallesVenta.codigo}" />
+                        </p:column>
+                        <p:column headerText="Descripción" style="text-align: left">
+                            <h:outputText value="#{detallesVenta.nombre}" />
+                        </p:column>
+                        <p:column headerText="P. Unitario" style="text-align: left;width:50px" id="descuentoIndividual">
+                            <h:outputText value="#{calculosMB.redondeoInferior(detallesVenta.costo)}" />
+                        </p:column>
+                        <p:column headerText="Total" style="text-align: left;width:50px" id="totalDescuento">
+                            <h:outputText value="#{calculosMB.redondeoInferior(detallesVenta.total)}" />
+                        </p:column>
+                    </p:dataTable>
+
+                    <p:spacer/>
+
+                    <h:panelGrid  id="panelTotales" columns="2" style="margin-left:80%;" styleClass="panelNoBorder">
+                        <p:outputLabel  value="Subtotal:" style="font-weight: bold"/>
+                        <p:outputLabel id="subTotal" style="font-weight: bold" value="#{calculosMB.redondeoSuperior(ventasDiariasMB.subtotal)}" />
+
+                        <p:outputLabel  style="font-weight: bold" value="Iva #{ventasDiariasMB.ivaMostrar.intValue()}%:"/>
+                        <p:outputLabel style="font-weight: bold" id="iva" value="#{calculosMB.redondeoSuperior(ventasDiariasMB.iva)}" />
+
+                        <p:outputLabel style="font-weight: bold" value="Total + Iva : "/>
+                        <p:outputLabel style="font-weight: bold" id="totalIva" value="#{calculosMB.redondeoSuperior(ventasDiariasMB.total)}"/>
+
+
+                        <p:outputLabel  style="font-weight: bold" value="Total a Pagar : "/>
+                        <p:outputLabel  style="font-weight: bold" id="totalPagar" value="#{calculosMB.redondeoSuperior(ventasDiariasMB.totalPagar)}"/>
+                    </h:panelGrid>
+                </p:panel>
+
+            </h:form>
+        </p:dialog>
+
+
+
+
+
+        <!--dialgo facturar  ventas diarias -->
+        <p:dialog widgetVar="dlgDetallesVentasDiariasFactura"
+                  minHeight="30" 
+                  width="700px"
+                  style="font-size:12px;background-color: white;background-image: none;padding: 0px;margin: 0px" 
+                  header="Detalles Ventas Diarias"
+                  resizable="false">
+            <h:form id="formDetallesVentasFactura">
+                <p:panel id="idDetallesFacturaFactura" >
+                    <p:dataTable var="detallesVenta" 
+                                 value="#{ventasDiariasMB.detallesVenta}" 
+                                 id="tablaDetallesFactura" 
+                                 scrollable="true" 
+                                 scrollHeight="150"> 
+
+                        <p:column headerText="Cantidad" style="text-align: left;width:70px">
+                            <p:outputLabel  value="#{detallesVenta.cantidad}" />
+                        </p:column>
+                        <p:column headerText="Código" style="text-align: left">
+                            <p:outputLabel  value="#{detallesVenta.codigo}" />
+                        </p:column>
+                        <p:column headerText="Descripción" style="text-align: left">
+                            <p:outputLabel  value="#{detallesVenta.nombre}" />
+                        </p:column>
+                        <p:column headerText="P. Unitario" style="text-align: left;width:50px" id="descuentoIndividual">
+                            <p:outputLabel  value="#{calculosMB.redondeoInferior(detallesVenta.costo)}" />
+                        </p:column>
+                        <p:column headerText="Total" style="text-align: left;width:50px" id="totalDescuento">
+                            <p:outputLabel  value="#{calculosMB.redondeoInferior(detallesVenta.total)}" />
+                        </p:column>
+                    </p:dataTable>
+
+                    <p:spacer/>
+
+                    <h:panelGrid  id="panelTotalesFactura" columns="2" style="margin-left:80%;" styleClass="panelNoBorder">
+                        <p:outputLabel style="font-weight: bold" value="Subtotal:"/>
+                        <p:outputLabel  style="font-weight: bold" id="subTotalFactura" value="#{calculosMB.redondeoSuperior(ventasDiariasMB.subtotal)}" />
+
+                        <p:outputLabel  style="font-weight: bold"  value="Iva #{ventasDiariasMB.ivaMostrar.intValue()}%:"/>
+                        <p:outputLabel style="font-weight: bold" id="ivaFactura" value="#{calculosMB.redondeoSuperior(ventasDiariasMB.iva)}" />
+
+                        <p:outputLabel style="font-weight: bold"  value="Total + Iva : "/>
+                        <p:outputLabel style="font-weight: bold" id="totalIvaFactura" value="#{calculosMB.redondeoSuperior(ventasDiariasMB.total)}"/>
+
+
+                        <p:outputLabel style="font-weight: bold" value="Total a Pagar : "/>
+                        <p:outputLabel style="font-weight: bold" id="totalPagarFactura" value="#{calculosMB.redondeoSuperior(ventasDiariasMB.totalPagar)}"/>
+                    </h:panelGrid>
+                </p:panel>
+
+
+                <p:panelGrid columns="3" style="margin: 0 auto;">
+                    <p:commandButton title="Facturar"  value="Facturar" partialSubmit="true" icon="fa fa-money" styleClass="btn_azul" onclick="PF('confirmarFacturaVentas').show();" />
+                    <p:commandButton title="Cancelar"  value="Cancelar" icon="fa fa-times" styleClass="btn_tomate"  onclick="PF('dlgDetallesVentasDiariasFactura').hide()" ajax="true"/>                    
+                </p:panelGrid>
+            </h:form>
+        </p:dialog>
+
+        <!-- Dialogo de confirmacion para grabar o cancelar-->
+        <p:dialog header="Seguro desea Facturar ?" widgetVar="confirmarFacturaVentas" modal="true" 
+                  resizable="false">
+            <p:panelGrid columns="1" styleClass="panelNoBorder" style="margin: 0 auto;text-align: center">
+                <h:form style="margin: 0 auto" target="_blank">
+                    <p:commandButton  value="Facturar" onclick="PF('confirmarFacturaVentas').hide();
+                            PF('dlgDetallesVentasDiariasFactura').hide()" icon="fa fa-floppy-o"
+                                      styleClass="btn_azul"  actionListener="#{ventasDiariasMB.facturar()}" action="factura" ajax="false" update=":formDetallesV" />
+                </h:form>
+                <h:form>
+                    <p:commandButton onclick="PF('confirmarFacturaVentas').hide();" value="Cancelar" icon="fa fa-ban" styleClass="btn_rojo"/>
+                </h:form>
+            </p:panelGrid>
+        </p:dialog>
+
+        <p:dialog header="Facturado" widgetVar="ok" modal="true" 
+                  resizable="false">
+            <h:form style="margin: 0 auto">
+                <p:outputLabel value="Factura Completa" />
+                <p:commandButton onclick="PF('ok').hide();" value="Aceptar" style="background-image: none;background-color: brown"/>
+            </h:form>
+        </p:dialog>
+
+        <!-- Dialogo para Servicios-->
+
+        <p:dialog  widgetVar="dlgVentasServicios"
+                   minHeight="40"
+                   width="500px" 
+                   style="font-size:12px;padding: 0px;margin: 0px" 
+                   header="Servicios"
+                   resizable="false">
+            <h:form id="formServiciosV">
+
+                <p:dataTable var="servicio" value="#{ventasDiariasMB.servicioLista}"
+                             rows="10"
+                             selectionMode="single" 
+                             scrollable="true" 
+                             scrollHeight="100"  
+                             rowKey="#{servicio.codigoServicio}"
+                             selection="#{ventasDiariasMB.servicioSeleccionado}">
+                    <p:ajax event="rowSelect" listener="#{ventasDiariasMB.onRowSelectService(event)}" update=":formGeneralV,:formEspecificoV"/>
+                    <p:ajax event="rowUnselect" listener="#{ventasDiariasMB.onRowUnSelectService(event)}"/>
+
+                    <p:column headerText="Código" filterBy="#{servicio.codigoServicio}" filterFunction="#{filtroMB.filterByName}" filterMatchMode="contains" >
+                        <h:outputText value="#{servicio.codigoServicio}" />
+                    </p:column>
+                    <p:column headerText="Nombre" filterBy="#{servicio.nombre}" filterFunction="#{filtroMB.filterByName}" filterMatchMode="contains">
+                        <h:outputText value="#{servicio.nombre}" />
+                    </p:column>
+                    <p:column headerText="Descripción">
+                        <h:outputText value="#{servicio.descripcion}" />
+                    </p:column>
+                </p:dataTable>
+
+            </h:form>
+
+            <p:dialog  id="dlgEscojerServicioV" header="Ingrese el precio" widgetVar="infEscojerServicioV" height="auto"
+                       resizable="false">
+                <h:form id="formEscojerServicioV">
+                    <p:messages id="msgServicioV" />
+                    <h:panelGrid columns="6" styleClass="panelNoBorder" >
+                        <p:outputLabel  value="Precio : "/>
+                        <p:inputText id="codEscojerServicioV" value="#{ventasDiariasMB.precioServicio}" required="true"/>
+                        <p:commandButton  icon="fa fa-plus-square"
+                                          styleClass="btn_azul" 
+                                          actionListener="#{ventasDiariasMB.venta('servicio')}" ajax="true" 
+                                          update=":formDetallesV,:formDetallesVentas:idDetallesFactura,:formDetallesVentasFactura:idDetallesFacturaFactura,:formDetallesVentas:panelTotales"/>
+                        <p:message for="codEscojerServicioV" />
+                        <p:commandButton icon="fa fa-times" styleClass="btn_tomate" onclick="PF('infEscojerServicioV').hide()" />
+                    </h:panelGrid>
+                </h:form>
+            </p:dialog>
+        </p:dialog>
+
+        <p:dialog widgetVar="dlgOrdenesTrabajo" 
+                  modal="true"
+                  header="Ordenes de Trabajo Listas"
+                  minHeight="30" 
+                  width="70%"
+                  id="idOrdenesTrabajo">
+            <h:form id="frmOrdenesTrabajo">
+                <p:dataTable var="ordenes" value="#{ventasDiariasMB.ordenesTrabajo}"
+                             rows="10"
+                             selectionMode="single" 
+                             scrollable="true" 
+                             scrollHeight="200"  
+                             rowKey="#{ordenes.idOrdenTrabajo}"
+                             selection="#{ventasDiariasMB.ordenTrabajoSeleccionada}">
+                    <p:ajax event="rowSelect" listener="#{ventasDiariasMB.mostrarDialogoDetallesOrden(event)}" update="frmDetallesOrdenesTrabajo"/>  
+                    <p:ajax event="rowUnselect" listener="#{ventasDiariasMB.onRowUnSelectOrden}"/>
+
+                    <p:column headerText="Código" filterBy="#{ordenes.idOrdenTrabajo}" filterFunction="#{filtroMB.filterByName}" filterMatchMode="contains" >
+                        <h:outputText value="#{ordenes.idOrdenTrabajo}" />
+                    </p:column>
+                    <p:column headerText="Cliente" filterBy="#{ordenes.cedulaRuc.nombre}" filterFunction="#{filtroMB.filterByName}" filterMatchMode="contains" >
+                        <h:outputText value="#{ordenes.cedulaRuc.nombre}" />
+                    </p:column>
+                    <p:column headerText="Equipos" filterBy="#{ordenes.toStringDetalle()}" filterFunction="#{filtroMB.filterByName}" filterMatchMode="contains">
+                        <h:outputText value="#{ordenes.toStringDetalle()}" />
+                    </p:column>
+                    <p:column headerText="Precio">
+                        <h:outputText value="#{ordenes.total}" />
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </p:dialog>
+
+        <!-- Dialago para mostrar los detalles de las ordenes  -->
+        <p:dialog widgetVar="dlgDetallesOrdenesTrabajo" 
+                  modal="true"
+                  header="Escojer los detalles a facturar"
+                  minHeight="30" 
+                  width="70%"
+                  id="dlgDetallesOrdenTrabajo">
+            <h:form id="frmDetallesOrdenesTrabajo">
+                <p:dataTable rows="10"                     
+                             id="tablaDetallesOrdenesTrabajo"
+                             var="detallesOrden"
+                             value="#{ventasDiariasMB.detallesOrdenMostrar}"
+                             scrollable="true"
+                             styleClass="titleBarAzul"
+                             selection="#{ventasDiariasMB.detallesOrdenSeleccionadas}" 
+                             rowKey="#{detallesOrden.idDetalleOrdenTrabajo}"
+                             style="margin-bottom:0"
+                             rowStyleClass="#{detallesOrden.estado eq 'facturado'?'filaVerde':null}"
+                             disabledSelection="#{detallesOrden.estado eq 'facturado'?'true':'false'}">
+                    <p:column selectionMode="multiple" style="width:50px;text-align:center"/>
+                    <p:column headerText="Código" >
+                        <h:outputText value="#{detallesOrden.idDetalleOrdenTrabajo}" />
+                    </p:column>
+                    <p:column headerText="Equipo">
+                        <h:outputText value="#{detallesOrden.equipo}" />
+                    </p:column>
+                    <p:column headerText="Descripción" >
+                        <h:outputText value="#{detallesOrden.descripcion}" />
+                    </p:column>
+                    <p:column headerText="Problema"  >
+                        <h:outputText value="#{detallesOrden.problema}" />
+                    </p:column>
+                    <p:column headerText="Tbj. Realizar" >
+                        <h:outputText value="#{detallesOrden.trabajoRealizar}" />
+                    </p:column>
+                    <p:column headerText="Diagnóstico" >
+                        <h:outputText value="#{detallesOrden.diagnostico}" />
+                    </p:column>
+                    <p:column headerText="Estado" styleClass="#{detallesOrden.estado eq 'devolver'?'filaRoja':detallesOrden.estado eq 'reparado'?'filaAzul':null}">
+                        <h:outputText value="#{detallesOrden.estado}" />
+                    </p:column>
+                    <f:facet name="footer">
+                        <p:commandButton update=":frmOrdenesTrabajo,
+                                         :formDetallesV,:formDetallesVentas:idDetallesFactura,:formDetallesVentasFactura:idDetallesFacturaFactura,:formDetallesVentas:panelTotales" 
+                                         value="Aceptar" 
+                                         styleClass="ui-botonCeleste"
+                                         action="#{ventasDiariasMB.onRowSelectOrden()}"/>
+                    </f:facet>
+                </p:dataTable>
+            </h:form>
+        </p:dialog>
+
+    </h:body>
+</html>

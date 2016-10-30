@@ -1,0 +1,107 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" 
+                xmlns:ui="http://java.sun.com/jsf/facelets" 
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:b="http://bootsfaces.net/ui"
+                template="/template/plantillaprincipal.xhtml">
+
+    <ui:define name="contenido">
+        <h:form id="loginForm">
+            <p:ajaxStatus onstart="PF('statusVerificando').show()" onsuccess="PF('statusVerificando').hide()" />
+            <p:growl id="growl" showDetail="true" sticky="true" /> 
+            <h4 class="titulo" style="text-align: center">Ingreso al Sistema</h4>
+
+            <p:spacer width="50px"/>
+
+            <b:panel  look="primary">
+                <b:row>
+                    <b:column col-md="2" col-xs="10" offset="5" >
+                        <b:inputText placeholder="Usuario" required="true" id="username" value="#{sessionMB.nick}">
+                            <f:facet name="prepend">
+                                <b:icon name="user" />
+                            </f:facet>
+                        </b:inputText>
+                    </b:column>
+                    <b:column col-md="6"/>
+
+                </b:row>
+
+                <b:row>
+
+                    <b:column col-md="2" col-xs="10" offset="5" >
+                        <b:inputSecret required="true" placeholder="Clave" id="password" value="#{sessionMB.clave}">
+                            <f:facet name="prepend">
+                                <b:iconAwesome name="key" />
+                            </f:facet>
+                        </b:inputSecret>
+                    </b:column>
+
+                </b:row>
+
+                <b:row>
+
+                    <b:column col-md="2" col-xs="10" offset="5" >
+                        <b:selectOneMenu value="#{sessionMB.perfilNombre}" >
+                            <f:selectItem itemLabel="Operador" itemValue="operador"/>
+                            <f:selectItem itemLabel="Empleado" itemValue="empleado"/>
+                            <f:selectItem itemLabel="Administrador" itemValue="admin"/>    
+                        </b:selectOneMenu>
+                    </b:column>
+
+                </b:row>
+
+                <p:spacer width="4px"/>
+                <b:row>
+                    <b:column col-md="2" offset="5">
+                        <b:commandButton                            
+                            value="Ingresar" 
+                            action="#{sessionMB.iniciarSesion()}" 
+                            update="growl" 
+                            ajax="false"  
+                            look="primary"
+                                         style="width:100%" />
+                    </b:column>
+
+                </b:row>
+                <p:spacer width="0px"/>
+                <b:row>
+                    <b:column span="2" offset="5">
+                        <b:commandButton value="Olvide mi clave" onclick="ajax:loginBean.forgotPassword()" update="@form"
+                                         look="danger" style="width:100%" />
+                    </b:column>
+                </b:row>
+            </b:panel>
+
+
+
+
+        </h:form>
+
+
+        <h:form>
+
+            <p:commandButton onclick="document.media.Play();" value="play" update="media" rendered="false"/>
+
+            <p:media id="media" value="#{sessionMB.urlSonido}" player="quicktime" style="visibility: hidden;">
+                <f:param name="autoPlay" value="true" />
+                <f:param name="enablejavascript" value="true"/>
+            </p:media>
+
+        </h:form>
+        
+        
+
+        <!-- Dialago para mostrar la espera del envio del correo  -->
+        <p:dialog widgetVar="statusVerificando" modal="false" draggable="false" closable="false" resizable="false" showHeader="false">
+            <p:panelGrid columns="2" styleClass="panelNoBorder">
+                <p:graphicImage library="img"  name="/util/waitIcon.gif" />
+                <p:outputLabel value="Espere porfavor ..." />
+            </p:panelGrid>
+        </p:dialog>
+
+
+    </ui:define>
+</ui:composition>

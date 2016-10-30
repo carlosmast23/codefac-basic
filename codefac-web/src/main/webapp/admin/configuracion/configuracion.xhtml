@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" 
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" 
+                xmlns:ui="http://java.sun.com/jsf/facelets" 
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:b="http://bootsfaces.net/ui"
+                template="/template/plantilladmin.xhtml">
+
+
+    <ui:define name="contenido" >
+
+        <div style="text-align: center">
+            <i class="fa fa-cog fa-spin fa-5x fa-fw margin-bottom"></i>
+            <span class="sr-only">Configuración.</span>
+            <p:panel header="Configuración Empresa..."  style="width:70%;margin: 0 auto" styleClass="titleBarAzul">  
+                <!-- Formulario para controlar el encabezado de la compra -->
+                <h:form id="formConfiguracionE">
+                    <p:growl id="msgsE" showDetail="true" />
+                    <p:panelGrid columns="4" styleClass="panelNoBorder" style="font-size: 11px;width: 100%;text-align: left">
+                        <p:outputLabel style="font-weight: bold" value="RUC Empresa " />
+                        <p:outputLabel style="font-weight: bold" value="#{sistemaMB.empresa.rucEmpresa}" />
+                        <p:outputLabel style="font-weight: bold" value="Nombre "/>
+                        <p:outputLabel style="font-weight: bold" value="#{sistemaMB.empresa.nombre}" />
+                        <p:outputLabel style="font-weight: bold" value="Propietario"/>
+                        <p:inputText value="#{sistemaMB.empresa.propietario}"  placeholder="Ingrese el nombre del Propietario"/>
+                        <p:outputLabel style="font-weight: bold" value="Dirección"/>
+                        <p:inputTextarea value="#{sistemaMB.empresa.direccion}"  placeholder="Ingrese la dirección"/>
+                        <p:outputLabel style="font-weight: bold" value="Correo Electrónico"/>
+                        <p:inputText value="#{sistemaMB.empresa.email}"  placeholder="Ingrese el correo"/>
+                        <p:outputLabel style="font-weight: bold" value="Teléfonos"/>
+                        <p:inputTextarea value="#{sistemaMB.empresa.telefonos}"  placeholder="2222222-333333-099999999"/>
+                        <p:outputLabel style="font-weight: bold" value="Slogan"/>
+                        <p:inputTextarea value="#{sistemaMB.empresa.eslogan}"  placeholder="Codefac Facturando Tus Ideas"/>
+                        <p:outputLabel style="font-weight: bold" value="Facebook"/>
+                        <p:inputText value="#{sistemaMB.empresa.facebook}"  placeholder="codesoft.ec"/>
+                        <p:outputLabel style="font-weight: bold" value="Skype"/>
+                        <p:inputText value="#{sistemaMB.empresa.skype}"  placeholder="Codesoft"/>
+                        <p:outputLabel style="font-weight: bold" value="Twitter"/>
+                        <p:inputText value="#{sistemaMB.empresa.twiter}"  placeholder="@Codesoft"/>
+                        <p:outputLabel style="font-weight: bold" value="Whatssap"/>
+                        <p:inputText value="#{sistemaMB.empresa.whatsapp}"  placeholder="099999999"/>
+                        <p:outputLabel style="font-weight: bold" value="WebSite"/>
+                        <p:inputText value="#{sistemaMB.empresa.paginaOficial}"  placeholder="www.codesoft.zz.mu"/>
+
+                    </p:panelGrid>
+                    <p:separator/>
+                    <p:commandButton value="Guardar"
+                                     icon="fa fa-floppy-o"
+                                     styleClass="btn_azul"
+                                     actionListener="#{sistemaMB.guardarEmpresa()}"
+                                     update="@form"
+                                     title="Guardar la Configuración de la Empresa"/>
+
+
+
+                </h:form>
+            </p:panel>
+
+
+            <p:separator/>
+            <p:panel header="Configuración General"  style="width: 70%;margin: 0 auto;text-align: left" styleClass="titleBarVerde"> 
+                <!-- Formulario para controlar el encabezado de la compra -->
+                <h:form id="formConfiguracionG">
+                    <p:messages id="msgsC" showDetail="true" />
+                    <p:panelGrid columns="6" styleClass="panelNoBorder" style="font-size: 11px;width: 100%">
+
+                        <p:outputLabel for="civa" style="font-weight: bold" value="Iva %"/>
+                        <p:inputText id="civa" value="#{sistemaMB.configuracionEnviar.iva}" required="true" requiredMessage="Iva Requerido"  placeholder="Iva">
+                            <p:clientValidator event="keyup"/>
+                        </p:inputText> 
+                        <p:message for="civa" display="icon" />    
+
+                        <p:outputLabel for="cruta" style="font-weight: bold" value="Ruta Reportes"/>
+                        <p:inputTextarea id="cruta" value="#{sistemaMB.configuracionEnviar.pathreportes}" required="true" requiredMessage="Ruta Requerido" placeholder="Ingrese la ruta">
+                            <p:clientValidator event="keyup"/>
+                        </p:inputTextarea>
+                        <p:message for="cruta" display="icon" />   
+
+                        <p:outputLabel for="cmif" style="font-weight: bold" value="Max Items facturas"/>
+                        <p:inputText id="cmif" value="#{sistemaMB.configuracionEnviar.maxItemFactura}" required="true" requiredMessage="N Items Requerido"  placeholder="N Items">
+                            <p:clientValidator event="keyup"/>
+                        </p:inputText>
+                        <p:message for="cmif" display="icon" /> 
+
+                        <p:outputLabel for="cmin" style="font-weight: bold" value="Max Items Notas"/>
+                        <p:inputText id="cmin" value="#{sistemaMB.configuracionEnviar.maxItemNota}" required="true" requiredMessage="N Items Requerido"   placeholder="N Items">
+                            <p:clientValidator event="keyup"/>
+                        </p:inputText>
+                        <p:message for="cmin" display="icon" /> 
+
+                        <p:outputLabel for="cmio" style="font-weight: bold" value="Max Items Orden Trabajo"/>
+                        <p:inputText id="cmio" value="#{sistemaMB.configuracionEnviar.maxItemOrdenTrabajo}" required="true" requiredMessage="N Items Requerido"  placeholder="Iva">
+                            <p:clientValidator event="keyup"/>
+                        </p:inputText>
+                        <p:message for="cmio" display="icon" /> 
+
+                        <p:outputLabel for="ccorreo" style="font-weight: bold" value="Correo Electrónico Servicio Técnico"/>
+                        <p:inputText id="ccorreo" value="#{sistemaMB.configuracionEnviar.emailServicioTecnico}" required="true" requiredMessage="Correo  Requerido"  validatorMessage="No es una dirección de correo correcta" placeholder="Ingrese el Correo">
+                            <p:clientValidator event="keyup"/>
+                        </p:inputText>
+                        <p:message for="ccorreo" display="icon" /> 
+
+                        <p:outputLabel for="cclave" style="font-weight: bold" value="Clave Correo Electrónico Servicio Técnico"/>
+                        <p:inputText id="cclave" value="#{sistemaMB.configuracionEnviar.claveEmailServicioTecnico}" required="true" requiredMessage="Clave Requerido" placeholder="Ingrese la clave">
+                            <p:clientValidator event="keyup"/>
+                        </p:inputText>
+                        <p:message for="cclave" display="icon" /> 
+
+
+                        <p:outputLabel for="cstockmin" style="font-weight: bold" value="Avisar Stock Mínimo "/>
+                        <p:inputText id="cstockmin" value="#{sistemaMB.configuracionEnviar.stockMinimo}" required="true" requiredMessage="Valor requerido" placeholder="0">
+                            <p:clientValidator event="keyup"/>
+                        </p:inputText>
+                        <p:message for="cstockmin" display="icon" /> 
+
+                        <f:facet name="footer">
+                            <p:outputLabel for="cnotasOrden" style="font-weight: bold" value="Notas Orden Trabajo"/>    
+                            <p:inputTextarea cols="100" rows="8" id="cnotasOrden" value="#{sistemaMB.configuracionEnviar.notasOrden}" required="true" requiredMessage="Valor requerido" placeholder="Ingrese la nota sobre su orden">
+                                <p:clientValidator event="keyup"/>
+                            </p:inputTextarea>
+                            <p:message for="cnotasOrden" display="icon" /> 
+                        </f:facet>
+                    </p:panelGrid>
+
+                    <p:separator/>
+                    <div style="text-align: center">
+                        <p:commandButton value="Guardar"
+                                         style="margin: 0 auto"
+                                         icon="fa fa-floppy-o"
+                                         styleClass="btn_verde"
+                                         actionListener="#{sistemaMB.guardarConfiguracion()}"
+                                         update="@form,msgsC" title="Guardar la configuración general"/>
+                    </div>
+
+                </h:form>
+            </p:panel>
+        </div>
+    </ui:define>
+
+</ui:composition>
